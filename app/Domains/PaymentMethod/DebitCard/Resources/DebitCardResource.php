@@ -3,7 +3,6 @@
 namespace App\Domains\PaymentMethod\DebitCard\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Support\Facades\Auth;
 
 class DebitCardResource extends JsonResource
 {
