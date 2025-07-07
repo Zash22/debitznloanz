@@ -28,3 +28,28 @@ it('allows an user to create a debit card', closure: function () {
 
     expect(DebitCard::where('user_id', $user->id)->exists())->toBeTrue();
 });
+
+it('fails to create a debit card due to invalid payload', function () {
+
+    $user = User::factory()->create();
+
+    $invalidPayload = [
+        'user_id'       => '',
+        'expiry_month'  => 13,
+        'expiry_year'   => 2030,
+        'cvv'           => '12',
+        'issuer'        => '',
+        'display_name'  => null,
+    ];
+
+    actingAs($user)
+        ->postJson('/api/debit-cards', $invalidPayload)
+        ->assertUnprocessable()
+        ->assertJsonValidationErrors([
+            'card_number',
+            'expiry_month',
+            'cvv',
+            'issuer',
+            'display_name',
+        ]);
+});
