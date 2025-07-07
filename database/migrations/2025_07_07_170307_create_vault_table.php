@@ -13,10 +13,8 @@ class CreateVaultTable extends Migration
     {
         Schema::create('vaults', function (Blueprint $table) {
             $table->id();
-//            $table->unsignedBigInteger('debit_card_id')->index();
             $table->text('details'); //encrypted card#,exp & cvv
             $table->timestamps();
-//            $table->foreign('debit_card_id')->references('id')->on('debit_cards')->onDelete('cascade');
         });
     }
 

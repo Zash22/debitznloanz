@@ -3,9 +3,9 @@
 namespace App\Domains\PaymentMethod\DebitCard\Controllers;
 
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
-use App\Http\Controllers\Controller;
-use App\Domains\PaymentMethod\DebitCard\Requests\StoreDebitCardRequest;
 use App\Domains\PaymentMethod\DebitCard\Resources\DebitCardResource;
+use App\Domains\PaymentMethod\DebitCard\Requests\StoreDebitCardRequest;
+use App\Http\Controllers\Controller;
 
 class DebitCardController extends Controller
 {

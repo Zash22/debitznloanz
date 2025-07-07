@@ -4,6 +4,7 @@ namespace App\Domains\PaymentMethod\DebitCard\Services;
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\PaymentMethod\DebitCard\Repositories\DebitCardRepository;
 use App\Domains\Vault\Models\Vault;
+
 class DebitCardService
 {
     /**
@@ -40,8 +41,6 @@ class DebitCardService
 
         $vault_card = $this->vault->create(['details' => encrypt(json_encode($vault_data))]);
 
-//        dd($vault_card->id);
-
         $debit_card = [
             'issuer' => $data['issuer'],
             'vault_id' => $vault_card->id,
@@ -50,11 +49,5 @@ class DebitCardService
         ];
 
         return $this->repository->create($debit_card);
-
-
-
-//        return $this->repository->create($data);
-
-
     }
 }
