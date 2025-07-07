@@ -20,6 +20,7 @@ class StoreDebitCardRequest extends FormRequest
             'expiry_year' => ['required', 'integer', 'min:' . date('Y')],
             'cvv' => ['required', 'string', 'size:3'],
             'issuer' => ['required', 'string'],
+            'user_id' => ['required', 'integer'],
         ];
     }
 }
