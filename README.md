@@ -18,11 +18,18 @@ To create user:
 
 # \App\Domains\User\Models\User::factory()->create();
 
+Code standard checks:
+
+# vendor/bin/phpcs --standard=PSR12 app/
+
+Code standard fixes:
+
+# vendor/bin/phpcbf --standard=PSR12 app/
+
 
 ToFix: 
 
 uses(RefreshDatabase::class);
-errors on validation
 create a cast for vault details to encrypt.
 
 
