@@ -22,6 +22,8 @@ Code standard checks:
 
 # vendor/bin/phpcs --standard=PSR12 app/
 
+# vendor/bin/phpstan analyse --memory-limit=512M
+
 Code standard fixes:
 
 # vendor/bin/phpcbf --standard=PSR12 app/

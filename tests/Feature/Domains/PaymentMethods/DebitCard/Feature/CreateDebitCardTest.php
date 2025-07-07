@@ -10,6 +10,7 @@ use function Pest\Laravel\actingAs;
 
 it('allows an user to create a debit card', closure: function () {
 
+    /** @var User $user */
     $user = User::factory()->create();
 
     $payload = [
@@ -32,6 +33,7 @@ it('allows an user to create a debit card', closure: function () {
 
 it('fails to create a debit card due to invalid payload', function () {
 
+    /** @var User $user */
     $user = User::factory()->create();
 
     $invalidPayload = [
