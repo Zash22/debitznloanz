@@ -38,7 +38,7 @@ class DebitCardService
             'card_cvv' => $data['cvv'],
         ];
 
-        $vault_card = $this->vault->create(['details' => json_encode($vault_data, true)]);
+        $vault_card = $this->vault->create(['details' => encrypt(json_encode($vault_data))]);
 
 //        dd($vault_card->id);
 
