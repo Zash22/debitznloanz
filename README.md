@@ -24,6 +24,9 @@ Code standard checks:
 
 # vendor/bin/phpstan analyse --memory-limit=512M
 
+# vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,design
+
+
 Code standard fixes:
 
 # vendor/bin/phpcbf --standard=PSR12 app/
