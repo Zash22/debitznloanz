@@ -15,6 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->string('display_name');
+            $table->string('issuer');
+            $table->foreignId('vault_id')->constrained()->cascadeOnDelete();
             $table->timestamps();
         });
     }
