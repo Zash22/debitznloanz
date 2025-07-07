@@ -18,13 +18,6 @@ class Vault extends Model
         'details',
     ];
 
-//    /**
-//     * Relationship: Vault belongs to a Debit Card.
-//     */
-//    public function debitCard()
-//    {
-//        return $this->belongsTo(DebitCard::class);
-//    }
 
     /**
      * Optionally encrypt value when setting.
