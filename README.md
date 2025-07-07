@@ -12,8 +12,18 @@ Migrations:
 
 # php artisan migrate --env=testing
 
+To create user:
+
+# php artisan tinker
+
+# \App\Domains\User\Models\User::factory()->create();
+
 
 ToFix: 
 
 uses(RefreshDatabase::class);
+errors on validation
+create a cast for vault details to encrypt.
+
+
 
