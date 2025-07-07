@@ -11,7 +11,6 @@ class DebitCardResource extends JsonResource
     {
         return [
             'id' => $this->id,
-//            'user' => Auth::user(),
             'display_name' => $this->display_name,
             'created_at' => $this->created_at,
         ];

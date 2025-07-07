@@ -4,13 +4,14 @@ namespace App\Domains\PaymentMethod\DebitCard\Controllers;
 
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
 use App\Http\Controllers\Controller;
-use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\PaymentMethod\DebitCard\Requests\StoreDebitCardRequest;
 use App\Domains\PaymentMethod\DebitCard\Resources\DebitCardResource;
-use Illuminate\Support\Facades\Auth;
 
 class DebitCardController extends Controller
 {
+    /**
+     * @var DebitCardService
+     */
     protected DebitCardService $service;
 
     public function __construct(DebitCardService $service)
@@ -20,10 +21,8 @@ class DebitCardController extends Controller
 
     public function store(StoreDebitCardRequest $request): DebitCardResource
     {
-
         $card = $this->service->create([
-            ...$request->validated(),
-            'user_id' => Auth::id(),
+            ...$request->validated(), //php spread operator
         ]);
 
         return new DebitCardResource($card);

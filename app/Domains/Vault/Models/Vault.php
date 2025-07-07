@@ -2,9 +2,9 @@
 
 namespace App\Domains\Vault\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Vault extends Model
 {
@@ -14,26 +14,14 @@ class Vault extends Model
 
     // Mass assignable fields
     protected $fillable = [
-//        'debit_card_id',
         'details',
     ];
 
-
     /**
-     * Optionally encrypt value when setting.
+     * Relationship: Vault belongs to a Debit Card.
      */
-    public function setValueAttribute($details)
+    public function debitCard()
     {
-
-//        dd($details);
-        $this->attributes['details'] = encrypt($details);
-    }
-
-    /**
-     * Optionally decrypt value when getting.
-     */
-    public function getValueAttribute($details)
-    {
-        return decrypt($details);
+        return $this->hasOne(DebitCard::class);
     }
 }

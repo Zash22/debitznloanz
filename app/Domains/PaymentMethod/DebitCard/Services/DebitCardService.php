@@ -31,15 +31,11 @@ class DebitCardService
      */
     public function create(array $data): DebitCard
     {
-//        dd($data);
-
-
 
         $vault_data = [
             'card_number' => $data['card_number'],
             'card_expiry' => $data['expiry_month'] . '/' . $data['expiry_year'],
             'card_cvv' => $data['cvv'],
-//            'card_holder' => $data['card_holder'],
         ];
 
         $vault_card = $this->vault->create(['details' => json_encode($vault_data, true)]);

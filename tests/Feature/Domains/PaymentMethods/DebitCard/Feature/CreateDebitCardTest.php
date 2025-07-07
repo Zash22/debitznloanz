@@ -3,9 +3,7 @@
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\User\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\DB;
 use function Pest\Laravel\actingAs;
-use function Pest\Laravel\postJson;
 
 //uses(RefreshDatabase::class);
 
