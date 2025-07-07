@@ -53,5 +53,4 @@ class StoreDebitCardRequest extends FormRequest
             'display_name.max'      => 'The display name may not be greater than 255 characters.',
         ];
     }
-
 }

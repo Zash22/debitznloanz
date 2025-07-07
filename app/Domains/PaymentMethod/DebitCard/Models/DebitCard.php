@@ -29,4 +29,3 @@ class DebitCard extends Model
         return $this->belongsTo(Vault::class);
     }
 }
-
