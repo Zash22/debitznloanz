@@ -34,21 +34,21 @@ class DebitCardService
     public function create(array $data): DebitCard
     {
 
-        $vault_data = [
+        $vaultData = [
             'card_number' => $data['card_number'],
             'card_expiry' => $data['expiry_month'] . '/' . $data['expiry_year'],
             'card_cvv' => $data['cvv'],
         ];
 
-        $vault_card = $this->vault->create(['details' => encrypt(json_encode($vault_data))]);
+        $vaultCard = $this->vault->create(['details' => encrypt(json_encode($vaultData))]);
 
-        $debit_card = [
+        $debitCard = [
             'issuer' => $data['issuer'],
-            'vault_id' => $vault_card->id,
+            'vault_id' => $vaultCard->id,
             'user_id' => $data['user_id'],
             'display_name' => $data['display_name'],
         ];
 
-        return $this->repository->create($debit_card);
+        return $this->repository->create($debitCard);
     }
 }
