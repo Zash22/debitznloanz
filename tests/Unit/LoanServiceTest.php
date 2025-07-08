@@ -4,13 +4,14 @@ use App\Domains\Loan\Models\Loan;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
+use App\Domains\Loan\Repositories\LoanServiceRepository;
 //use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class);
 //uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->loanService = new LoanService();
+    $this->loanService = new LoanService(new LoanServiceRepository());
 });
 
 test('it creates a loan', function () {
