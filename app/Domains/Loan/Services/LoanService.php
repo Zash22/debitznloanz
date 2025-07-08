@@ -17,29 +17,29 @@ class LoanService
     public function createLoan(array $data)
     {
 
-
         return DB::transaction(function () use ($data) {
             $loan = Loan::create([
-                'user_id'          => $data['user_id'],
-                'term'             => $data['term'],
-                'frequency'        => $data['frequency'], // 'monthly' or 'biweekly'
-                'term_amount'      => $data['term_amount'],
-                'principal_amount' => $data['principal_amount'],
-                'remaining_balance'=> $data['principal_amount'], // assume full balance at start
-                'start_date'       => $data['start_date'],
+                ...$data,
+                'status' => 'active',
             ]);
 
+//            dd($this->calculatePayments($loan));
 
-            foreach ($this->calculatePayments($loan) as $key => $payment) {
-                ScheduledPayment::create([
-                    'loan_id' => $loan->id,
-                    'amount' => $payment['amount'],
-                    'run_date' => $payment['run_date'],
-                ]);
-            }
+            $this->saveScheduledPayments($loan->id, $this->calculatePayments($loan));
 
             return $loan->refresh();
         });
+    }
+
+    public function saveScheduledPayments($loadId, $payments):  void
+    {
+        foreach ($payments as $payment) {
+            ScheduledPayment::create([
+                'loan_id' => $loadId,
+                'amount' => $payment['amount'],
+                'run_date' => $payment['run_date'],
+            ]);
+        }
     }
 
     public function calculatePayments(Loan $loan): array

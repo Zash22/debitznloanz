@@ -3,10 +3,11 @@
 use App\Domains\Loan\Models\Loan;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class);
-// uses(RefreshDatabase::class); // Uncomment if you want database refresh between tests
+ uses(RefreshDatabase::class); // Uncomment if you want database refresh between tests
 
 beforeEach(function () {
     $this->loanService = new LoanService();
@@ -21,17 +22,16 @@ test('it creates a loan', function () {
         'frequency'        => 'monthly',
         'term_amount'      => 2000.00,
         'principal_amount' => 12000.00,
+        'remaining_balance' => 12000.00,
         'start_date'       => now()->toDateString(),
     ];
 
     $loan = $this->loanService->createLoan($loanData);
 
-//    dd($loan);
 
     expect($loan)->toBeInstanceOf(Loan::class);
-    expect($loan->scheduledPayments)->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class);
+    expect($loan->scheduledPayments)->toBeInstanceOf(Collection::class);
 
-//    dd($loan->scheduledPayments);
 
     $this->assertDatabaseHas('loans', [
         'id'               => $loan->id,
@@ -44,36 +44,49 @@ test('it creates a loan', function () {
 });
 
 
-//test('it creates scheduled payments', function () {
-//    $user = User::factory()->create();
-//
-//    $loanData = [
-//        'user_id'          => $user->id,
-//        'term'             => 6,
-//        'frequency'        => 'monthly',
-//        'term_amount'      => 2000.00,
-//        'principal_amount' => 12000.00,
-//        'start_date'       => now()->toDateString(),
-//    ];
-//
-//    $loan = $this->loanService->createLoan($loanData);
-//
-////    dd($loan);
-//
-//    expect($loan)->toBeInstanceOf(Loan::class);
-//    expect($loan->scheduledPayments)->toBeInstanceOf(\Illuminate\Database\Eloquent\Collection::class);
-//
-////    dd($loan->scheduledPayments);
-//
-//    $this->assertDatabaseHas('loans', [
-//        'id'               => $loan->id,
-//        'user_id'          => $user->id,
-//        'term'             => 6,
-//        'frequency'        => 'monthly',
-//        'principal_amount' => 12000.00,
-//        'remaining_balance'=> 12000.00,
-//    ]);
-//});
+test('it creates scheduled payments', function () {
+    $user = User::factory()->create();
+
+    $loan = Loan::factory()->create([
+        'user_id'          => $user->id,
+    ]);
+
+
+    $data = [
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-07-01"
+        ],
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-08-01"
+        ],
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-09-01"
+        ],
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-10-01"
+        ],
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-11-01"
+        ],
+        [
+            "amount" => 2000.0,
+            "run_date" => "2025-12-01"
+        ]
+    ];
+
+    $this->loanService->saveScheduledPayments($loan->id, $data);
+
+    $this->assertDatabaseHas('scheduled_payments', [
+        'loan_id'               => $loan->id,
+    ]);
+
+    expect($loan->refresh()->scheduledPayments()->count())->toBe(6);
+});
 
 test('it calculates payments correctly', function () {
     $loan = Loan::factory()->create([
