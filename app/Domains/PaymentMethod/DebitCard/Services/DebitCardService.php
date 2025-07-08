@@ -63,4 +63,8 @@ class DebitCardService
         return $this->repository->findByUserId($userId);
     }
 
+    public function findById(int $id): DebitCard
+    {
+        return $this->repository->findById($id);
+    }
 }
