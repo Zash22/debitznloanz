@@ -2,18 +2,25 @@
 
 namespace App\Domains\Transaction\Models;
 
+use Database\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use App\Domains\User\Models\User;
+//use hasFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Transaction extends Model
 {
+    /** @use HasFactory<TransactionFactory> */
+    use HasFactory;
+
+    protected $table = 'transactions';
+
     protected $fillable = [
         'user_id',
         'amount',
-        'purpose',
-        'loan_id',
-        'scheduled_payment_id',
         'note',
+        'ref',
         'paid_at',
     ];
 
@@ -24,16 +31,11 @@ class Transaction extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Domains\User\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
-    public function loan(): BelongsTo
+    protected static function newFactory(): TransactionFactory
     {
-        return $this->belongsTo(\App\Domains\Loan\Models\Loan::class);
-    }
-
-    public function scheduledPayment(): BelongsTo
-    {
-        return $this->belongsTo(\App\Domains\Loan\Models\ScheduledPayment::class);
+        return TransactionFactory::new();
     }
 }

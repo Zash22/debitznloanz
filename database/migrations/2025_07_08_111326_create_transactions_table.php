@@ -10,8 +10,8 @@ return new class extends Migration {
             $table->id('id');
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
             $table->decimal('amount', 12, 2);
-            $table->enum('purpose', ['installment', 'loan', 'other']);
             $table->text('note')->nullable();
+            $table->text('ref')->nullable();
             $table->timestamp('paid_at');
             $table->timestamps();
         });
