@@ -10,12 +10,14 @@ class DebitCardRepository
     {
         return DebitCard::create($data);
     }
-//    public function findById(int $id): ?DebitCard
-//    {
-//        return DebitCard::find($id);
-//    }
-//    public function findByUserId(int $userId): ?DebitCard
-//    {
-//        return DebitCard::where('user_id', $userId)->first();
-//    }
+
+    public function findByUserId(int $userId)
+    {
+        return DebitCard::where('user_id', $userId)->get();
+    }
+
+    public function findById(int $id): DebitCard
+    {
+        return DebitCard::findOrFail($id);
+    }
 }

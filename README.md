@@ -8,6 +8,9 @@ To start api:
 To create tests:
 # php artisan make:test Domains/PaymentMethods/DebitCard/Feature/ListDebitCardsTest --pest
 
+To run tests:
+# php artisan test --filter=CreateDebitCardTest
+
 Migrations:
 
 # php artisan migrate --env=testing
@@ -32,10 +35,16 @@ Code standard fixes:
 # vendor/bin/phpcbf --standard=PSR12 app/
 
 
+
+
+
 ToFix: 
 
 uses(RefreshDatabase::class);
 create a cast for vault details to encrypt.
+create repository for vault
+generate new app key for test env
+policy for viewAll DebitCard
 
 
 

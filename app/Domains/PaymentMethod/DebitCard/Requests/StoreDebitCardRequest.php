@@ -20,16 +20,12 @@ class StoreDebitCardRequest extends FormRequest
             'expiry_year' => ['required', 'integer', 'min:' . date('Y')],
             'cvv' => ['required', 'string', 'size:3'],
             'issuer' => ['required', 'string'],
-            'user_id' => ['required', 'integer'],
         ];
     }
 
     public function messages(): array
     {
         return [
-            'user_id.required'      => 'The user ID is required.',
-            'user_id.exists'        => 'The selected user ID is invalid.',
-
             'card_number.required'      => 'A card number is required.',
             'card_number.digits_between' => 'The card number must be between 13 and 19 digits.',
 

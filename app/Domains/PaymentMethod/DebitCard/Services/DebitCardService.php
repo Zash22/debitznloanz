@@ -8,29 +8,16 @@ use App\Domains\Vault\Models\Vault;
 
 class DebitCardService
 {
-    /**
-     * @var DebitCardRepository
-     */
     protected DebitCardRepository $repository;
 
-    /**
-     * @var Vault
-     */
     private Vault $vault;
 
-    /**
-     * @param DebitCardRepository $repository
-     */
     public function __construct(DebitCardRepository $repository, Vault $vault)
     {
         $this->repository = $repository;
         $this->vault = $vault;
     }
 
-    /**
-     * @param array $data
-     * @return DebitCard
-     */
     public function create(array $data): DebitCard
     {
 
@@ -50,5 +37,15 @@ class DebitCardService
         ];
 
         return $this->repository->create($debitCard);
+    }
+
+    public function getUserDebitCards(int $userId): mixed
+    {
+        return $this->repository->findByUserId($userId);
+    }
+
+    public function findById(int $id): DebitCard
+    {
+        return $this->repository->findById($id);
     }
 }
