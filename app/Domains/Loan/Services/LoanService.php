@@ -16,6 +16,7 @@ class LoanService
     {
         $this->loanServiceRepository = $loanServiceRepository;
     }
+
     /**
      * Create a new loan.
      *
@@ -29,8 +30,6 @@ class LoanService
                 ...$data,
                 'status' => 'active',
             ]);
-
-//            dd($this->calculatePayments($loan));
 
             $this->saveScheduledPayments($loan->id, $this->calculatePayments($loan));
 
@@ -60,20 +59,20 @@ class LoanService
         for ($i = 0; $i < $term; $i++) {
             $runDate = $startDate->copy()->addMonths($i)->setDay(1);
             $payments[] = [
-                'amount' =>  ($loan->term_amount/$frequency),
+                'amount' =>  ($loan->term_amount / $frequency),
                 'run_date' => $runDate->toDateString(),
             ];
-            if($frequency == 2){
+            if ($frequency == 2) {
                 $payments[] = [
-                    'amount' =>  ($loan->term_amount/$frequency),
+                    'amount' =>  ($loan->term_amount / $frequency),
                     'run_date' => $runDate->copy()->setDay(15)->toDateString(),
                 ];
             }
-
         }
 
         return $payments;
     }
+
     public function updateScheduledPayment(Transaction $transaction, ScheduledPayment $scheduledPayment)
     {
         $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
