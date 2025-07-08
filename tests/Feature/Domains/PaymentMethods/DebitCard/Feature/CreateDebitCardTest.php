@@ -3,7 +3,6 @@
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\User\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-
 use function Pest\Laravel\actingAs;
 
 //uses(RefreshDatabase::class);

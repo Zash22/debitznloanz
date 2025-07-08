@@ -38,7 +38,7 @@ class DebitCardService
 
         return $this->repository->create($debitCard);
     }
-    
+
     public function getUserDebitCards(int $userId): mixed
     {
         return $this->repository->findByUserId($userId);

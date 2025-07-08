@@ -1,8 +1,11 @@
 <?php
+
 namespace App\Providers;
+
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\PaymentMethod\DebitCard\Policies\DebitCardPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+
 class AuthServiceProvider extends ServiceProvider
 {
     /**
