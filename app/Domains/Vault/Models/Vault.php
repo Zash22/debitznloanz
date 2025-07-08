@@ -3,6 +3,7 @@
 namespace App\Domains\Vault\Models;
 
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
+use Database\Factories\VaultFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -23,5 +24,10 @@ class Vault extends Model
     public function debitCard()
     {
         return $this->hasOne(DebitCard::class);
+    }
+
+    protected static function newFactory(): VaultFactory
+    {
+        return VaultFactory::new();
     }
 }
