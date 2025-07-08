@@ -5,10 +5,12 @@ namespace App\Domains\PaymentMethod\DebitCard\Controllers;
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
 use App\Domains\PaymentMethod\DebitCard\Resources\DebitCardResource;
 use App\Domains\PaymentMethod\DebitCard\Requests\StoreDebitCardRequest;
-use App\Http\Controllers\Controller;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Routing\Controller as BaseController;
 
-class DebitCardController extends Controller
+class DebitCardController extends BaseController
 {
+    use AuthorizesRequests;
     /**
      * @var DebitCardService
      */
