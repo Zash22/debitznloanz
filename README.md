@@ -45,6 +45,8 @@ create a cast for vault details to encrypt.
 create repository for vault
 generate new app key for test env
 policy for viewAll DebitCard
+UUID for card and user in urls and payload
+Move migrations and fatories to domains
 
 
 
