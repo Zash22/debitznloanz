@@ -16,4 +16,8 @@ class DebitCardRepository
         return DebitCard::where('user_id', $userId)->get();
     }
 
+    public function findById(int $id): DebitCard
+    {
+        return DebitCard::findOrFail($id);
+    }
 }
