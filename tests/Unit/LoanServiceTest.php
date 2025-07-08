@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\Loan\Models\Loan;
+use App\Domains\Transaction\Models\Transaction;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
@@ -28,6 +29,7 @@ test('it creates a loan', function () {
     ];
 
     $loan = $this->loanService->createLoan($loanData);
+
 
 
     expect($loan)->toBeInstanceOf(Loan::class);
@@ -167,3 +169,167 @@ test('it generates biweekly payments', function () {
         expect($payment['run_date'])->toBe($expected[$index]['date']);
     }
 });
+
+test('it sets scheduled payment to paid', function () {
+
+    $user = User::factory()->create();
+    $loan = Loan::factory()->create([
+        'user_id'          => $user->id,
+        'term'             => 6,
+        'frequency'        => 'monthly',
+        'term_amount'      => 2000.00,
+        'principal_amount' => 12000.00,
+        'remaining_balance' => 12000.00,
+        'start_date'       => '2025-07-08',
+    ]);
+
+    $runs =[
+        [
+            "run_date" => "2025-08-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-09-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-10-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-11-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-12-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-12-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+    ];
+
+    $this->loanService->saveScheduledPayments($loan->id, $runs);
+
+    $transaction = Transaction::factory()->create([
+        'user_id'  => $user->id,
+        'amount'   => 2000.00,
+        'note'     => '',
+        'ref'      => '',
+        'paid_at'  => '2025-08-01',
+    ]);
+
+
+    $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
+
+    $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
+
+    $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
+
+    expect($scheduledPayment->paid)->toBeTrue();
+    expect($scheduledPayment->paid_at->toDateString())->toBe('2025-08-01');
+});
+
+test('update loan balance', function () {
+
+    $user = User::factory()->create();
+    $loan = Loan::factory()->create([
+        'user_id'          => $user->id,
+        'term'             => 6,
+        'frequency'        => 'monthly',
+        'term_amount'      => 2000.00,
+        'principal_amount' => 12000.00,
+        'remaining_balance' => 12000.00,
+        'start_date'       => '2025-07-08',
+    ]);
+
+    $transaction1 = Transaction::factory()->create([
+        'user_id'  => $user->id,
+        'amount'   => 2000.00,
+        'note'     => '',
+        'ref'      => '',
+        'paid_at'  => '2025-08-01',
+    ]);
+
+
+    $transaction2 = Transaction::factory()->create([
+        'user_id'  => $user->id,
+        'amount'   => 2000.00,
+        'note'     => '',
+        'ref'      => '',
+        'paid_at'  => '2025-09-01',
+    ]);
+
+    $runs =[
+        [
+            "run_date" => "2025-08-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-09-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-10-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-11-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-12-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+        [
+            "run_date" => "2025-12-01",
+            "amount" => 2000,
+            "paid" => false,
+            "paid_at" => null,
+            "transaction_id" => null,
+        ],
+    ];
+
+    $this->loanService->updateLoanBalance($loan);
+
+   $this->expect($loan->remaining_balance)->toBe(8000.00);
+
+});
+
+
+
+

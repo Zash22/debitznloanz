@@ -74,4 +74,13 @@ class LoanService
 
         return $payments;
     }
+    public function updateScheduledPayment(Transaction $transaction, ScheduledPayment $scheduledPayment)
+    {
+        $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
+    }
+
+    public function updateLoanBalance(Loan $loan)
+    {
+        $payments = $this->loanServiceRepository->getLoanPayments($loan);
+    }
 }
