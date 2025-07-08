@@ -19,8 +19,8 @@ class DebitCardController extends BaseController
     public function __construct(DebitCardService $service)
     {
         $this->service = $service;
-    }
 
+    }
     /**
      * Store a new debit card.
      *
@@ -33,7 +33,6 @@ class DebitCardController extends BaseController
         $card = $this->service->create([
             ...$request->validated(), //php spread operator
         ]);
-
         return new DebitCardResource($card);
     }
 
