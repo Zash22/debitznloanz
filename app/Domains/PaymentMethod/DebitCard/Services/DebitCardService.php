@@ -51,4 +51,16 @@ class DebitCardService
 
         return $this->repository->create($debitCard);
     }
+
+    /**
+     * Get all debit cards for a user
+     *
+     * @param int $userId
+     * @return \Illuminate\Database\Eloquent\Collection
+     */
+    public function getUserDebitCards(int $userId)
+    {
+        return $this->repository->findByUserId($userId);
+    }
+
 }

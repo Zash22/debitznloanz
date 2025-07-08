@@ -29,4 +29,14 @@ class DebitCardController extends BaseController
 
         return new DebitCardResource($card);
     }
+
+    /**
+     * List all debit cards for the authenticated user.
+     *
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     */
+    public function index()
+    {
+        return DebitCardResource::collection($this->service->getUserDebitCards(auth()->id()));
+    }
 }
