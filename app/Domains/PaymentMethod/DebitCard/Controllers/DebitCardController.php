@@ -26,12 +26,13 @@ class DebitCardController extends BaseController
      *
      * @param StoreDebitCardRequest $request
      * @return DebitCardResource
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(StoreDebitCardRequest $request): DebitCardResource
     {
+
         $card = $this->service->create([
-            ...$request->validated(), //php spread operator
+            ...$request->validated(),
+            'user_id' => $request->user()->id
         ]);
         return new DebitCardResource($card);
     }

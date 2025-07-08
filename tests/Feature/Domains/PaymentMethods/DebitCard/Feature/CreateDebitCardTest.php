@@ -8,13 +8,12 @@ use function Pest\Laravel\actingAs;
 
 //uses(RefreshDatabase::class);
 
-it('allows an user to create a debit card', closure: function () {
+it('allows an authenticated user to create a debit card', closure: function () {
 
     /** @var User $user */
     $user = User::factory()->create();
 
     $payload = [
-        'user_id'  => $user->id,
         'card_number' => '4111111111111111',
         'expiry_month' => 12,
         'expiry_year' => 2030,
@@ -37,7 +36,6 @@ it('fails to create a debit card due to invalid payload', function () {
     $user = User::factory()->create();
 
     $invalidPayload = [
-        'user_id'       => '',
         'expiry_month'  => 13,
         'expiry_year'   => 2030,
         'cvv'           => '12',
@@ -55,4 +53,19 @@ it('fails to create a debit card due to invalid payload', function () {
             'issuer',
             'display_name',
         ]);
+});
+
+it('fails to create a debit card due to unauthenticated user', function () {
+
+    $payload = [
+        'card_number' => '4111111111111111',
+        'expiry_month' => 12,
+        'expiry_year' => 2030,
+        'cvv' => '123',
+        'issuer' => 'Test Bank',
+        'display_name' => 'test-create-card',
+    ];
+
+    $this->postJson('/api/debit-cards', $payload)
+        ->assertUnauthorized();
 });
