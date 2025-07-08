@@ -8,11 +8,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-
 class Loan extends Model
 {
     /** @use HasFactory<LoanFactory> */
     use HasFactory;
+
     protected $fillable = [
         'user_id',
         'term',

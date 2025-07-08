@@ -4,10 +4,10 @@ use App\Domains\Loan\Models\Loan;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+//use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(Tests\TestCase::class);
- uses(RefreshDatabase::class); // Uncomment if you want database refresh between tests
+//uses(RefreshDatabase::class);
 
 beforeEach(function () {
     $this->loanService = new LoanService();

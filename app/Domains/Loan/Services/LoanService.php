@@ -31,7 +31,7 @@ class LoanService
         });
     }
 
-    public function saveScheduledPayments($loadId, $payments):  void
+    public function saveScheduledPayments($loadId, $payments): void
     {
         foreach ($payments as $payment) {
             ScheduledPayment::create([
@@ -84,5 +84,4 @@ class LoanService
 //        dd($payments);
         return $payments;
     }
-
 }
