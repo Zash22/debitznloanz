@@ -4,37 +4,41 @@ namespace App\Domains\PaymentMethod\DebitCard\Policies;
 
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\User\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 
 class DebitCardPolicy
 {
+    use HandlesAuthorization;
+
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view all their cards.
      */
-public function viewAny(User $user): bool
+    public function viewAny(User $user): bool
     {
-        // Allow users to view their own debit cards
         return true;
+
+    //        dd(Response::allow());
+    //        return Response::allow();
     }
     /**
-     * Determine whether the user can view the model.
+     * Determine whether the user can view a specific card.
      */
-    public function view(User $user, DebitCard $debitCard): bool
+    public function view(User $user, DebitCard $debitCard): Response
     {
-        // Users can only view their own debit cards
-        return $user->id === $debitCard->user_id;
+
+        return $user->id === $debitCard->user_id ? Response::allow() : Response::deny('You do not have permission to view this card.')->withStatus(403);
     }
     /**
-     * Determine whether the user can create models.
+     * Determine whether the user can create cards.
      */
-    public function create(User $user): bool
+    public function create(User $user): Response
     {
-        // Allow authenticated users to create debit cards
-        return true;
+        return Response::allow();
     }
 
     /**
-     * Determine whether the user can update the model.
+     * Determine whether the user can update their card.
      */
     public function update(User $user, DebitCard $debitCard): bool
     {
@@ -45,22 +49,6 @@ public function viewAny(User $user): bool
      * Determine whether the user can delete the model.
      */
     public function delete(User $user, DebitCard $debitCard): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can restore the model.
-     */
-    public function restore(User $user, DebitCard $debitCard): bool
-    {
-        return false;
-    }
-
-    /**
-     * Determine whether the user can permanently delete the model.
-     */
-    public function forceDelete(User $user, DebitCard $debitCard): bool
     {
         return false;
     }
