@@ -35,8 +35,7 @@ Code standard fixes:
 # vendor/bin/phpcbf --standard=PSR12 app/
 
 
-Notes:
-extending BaseController to have access to routing middleware function.
+
 
 
 ToFix: 
@@ -45,6 +44,7 @@ uses(RefreshDatabase::class);
 create a cast for vault details to encrypt.
 create repository for vault
 generate new app key for test env
+policy for viewAll DebitCard
 
 
 
