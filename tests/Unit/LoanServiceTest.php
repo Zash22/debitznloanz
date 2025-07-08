@@ -51,7 +51,6 @@ test('it creates scheduled payments', function () {
         'user_id'          => $user->id,
     ]);
 
-
     $data = [
         [
             "amount" => 2000.0,
@@ -80,6 +79,17 @@ test('it creates scheduled payments', function () {
     ];
 
     $this->loanService->saveScheduledPayments($loan->id, $data);
+
+    $scheduledRuns = $loan->scheduledPayments()->get();
+
+    foreach ($scheduledRuns as $key => $scheduledRun) {
+
+        $run = new stdClass();
+        $run->amount = $scheduledRun->getAttribute('amount');
+        $run->run_date = $scheduledRun->getAttribute('run_date')->toDateString();
+
+        expect($run)->toMatchObject($data[$key], 'yes');
+    }
 
     $this->assertDatabaseHas('scheduled_payments', [
         'loan_id'               => $loan->id,
