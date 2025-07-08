@@ -1,6 +1,7 @@
 <?php
 
 use App\Domains\PaymentMethod\DebitCard\Controllers\DebitCardController;
+use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:sanctum')->group(function () {
