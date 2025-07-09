@@ -5,6 +5,7 @@ namespace App\Domains\PaymentMethod\DebitCard\Controllers;
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
 use App\Domains\PaymentMethod\DebitCard\Resources\DebitCardResource;
 use App\Domains\PaymentMethod\DebitCard\Requests\StoreDebitCardRequest;
+use App\Domains\PaymentMethod\Factories\PaymentMethodFactory;
 use App\Http\Controllers\Controller;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
@@ -15,51 +16,40 @@ class DebitCardController extends Controller
 {
     use AuthorizesRequests;
 
-    /**
-     * @var DebitCardService
-     */
     protected DebitCardService $service;
+    protected PaymentMethodFactory $paymentMethodFactory;
 
-    public function __construct(DebitCardService $service)
+    public function __construct(DebitCardService $service, PaymentMethodFactory $paymentMethodFactory)
     {
         $this->service = $service;
+        $this->paymentMethodFactory = $paymentMethodFactory;
     }
 
     public function index(Request $request): AnonymousResourceCollection
     {
-//        $this->authorize('viewAny');
-
         return DebitCardResource::collection($this->service->getUserDebitCards($request->user()->id));
     }
 
     /**
-     * @param Request $request
-     * @param int $id
-     * @return DebitCardResource
-     * @throws \Illuminate\Auth\Access\AuthorizationException
+     * @throws AuthorizationException
      */
     public function show(Request $request, int $id): DebitCardResource
     {
         $debitCard = $this->service->findById($id);
-
         $this->authorize('view', $debitCard);
-
         return new DebitCardResource($debitCard);
     }
 
-    /**
-     * Store a new debit card.
-     *
-     * @param StoreDebitCardRequest $request
-     * @return DebitCardResource
-     */
     public function store(StoreDebitCardRequest $request): DebitCardResource
     {
-
-        $card = $this->service->create([
+        $strategy = $this->paymentMethodFactory->create('debit_card');
+        
+        $data = [
             ...$request->validated(),
             'user_id' => $request->user()->id
-        ]);
+        ];
+
+        $card = $strategy->create($data);
         return new DebitCardResource($card);
     }
 }
