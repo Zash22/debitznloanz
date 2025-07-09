@@ -112,5 +112,6 @@ vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,des
 * [ ] Use standard naming eg 'ref' abd 'reference'
 * [ ] Apply code style formatter to all files
 * [ ] Add more tests, aim for 100% coverage
+* [ ] Add more tests to test for negative scenarios
 
 ---
