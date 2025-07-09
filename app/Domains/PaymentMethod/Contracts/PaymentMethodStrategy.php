@@ -2,7 +2,7 @@
 
 namespace App\Domains\PaymentMethod\Contracts;
 
-interface PaymentMethodStrategy
+interface PaymentMethodStrategy extends PaymentMethodInterface
 {
-    public function create(array $data): mixed;
+    public function getDetails(): array;
 }

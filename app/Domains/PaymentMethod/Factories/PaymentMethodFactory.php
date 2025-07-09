@@ -6,16 +6,18 @@ use App\Domains\PaymentMethod\Contracts\PaymentMethodStrategy;
 use App\Domains\PaymentMethod\DebitCard\Strategies\DebitCardStrategy;
 use InvalidArgumentException;
 
-class PaymentMethodFactory
+class PaymentMethodFactory extends AbstractPaymentMethodFactory
 {
     private array $strategies;
+
     public function __construct(DebitCardStrategy $debitCardStrategy)
     {
         $this->strategies = [
             'debit_card' => $debitCardStrategy
         ];
     }
-    public function create(string $type): PaymentMethodStrategy
+
+    public function createPaymentMethod(string $type): PaymentMethodStrategy
     {
         if (!isset($this->strategies[$type])) {
             throw new InvalidArgumentException(
@@ -23,5 +25,10 @@ class PaymentMethodFactory
             );
         }
         return $this->strategies[$type];
+    }
+
+    public function getSupportedTypes(): array
+    {
+        return array_keys($this->strategies);
     }
 }

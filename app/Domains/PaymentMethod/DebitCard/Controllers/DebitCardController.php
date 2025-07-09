@@ -16,18 +16,17 @@ class DebitCardController extends Controller
 {
     use AuthorizesRequests;
 
-    protected DebitCardService $service;
-    protected PaymentMethodFactory $paymentMethodFactory;
-
-    public function __construct(DebitCardService $service, PaymentMethodFactory $paymentMethodFactory)
-    {
-        $this->service = $service;
-        $this->paymentMethodFactory = $paymentMethodFactory;
+    public function __construct(
+        private readonly DebitCardService $service,
+        private readonly PaymentMethodFactory $paymentMethodFactory
+    ) {
     }
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        return DebitCardResource::collection($this->service->getUserDebitCards($request->user()->id));
+        return DebitCardResource::collection(
+            $this->service->getUserDebitCards($request->user()->id)
+        );
     }
 
     /**
@@ -42,13 +41,12 @@ class DebitCardController extends Controller
 
     public function store(StoreDebitCardRequest $request): DebitCardResource
     {
-        $strategy = $this->paymentMethodFactory->create('debit_card');
-        
+        $strategy = $this->paymentMethodFactory->createPaymentMethod('debit_card');
+
         $data = [
             ...$request->validated(),
             'user_id' => $request->user()->id
         ];
-
         $card = $strategy->create($data);
         return new DebitCardResource($card);
     }
