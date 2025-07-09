@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domains\User\Models\User;
 use Database\Factories\DebitCardFactory;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 #[UsePolicy(DebitCardPolicy::class)]
 class DebitCard extends Model
@@ -30,11 +31,11 @@ class DebitCard extends Model
     }
 
     /**
-     * Relationship: DebitCard belongs to a Vault.
+     * Relationship: DebitCard has one Vault entry
      */
-    public function vault(): BelongsTo
+    public function vault(): HasOne
     {
-        return $this->belongsTo(Vault::class);
+        return $this->hasOne(Vault::class);
     }
 
     protected static function newFactory(): DebitCardFactory

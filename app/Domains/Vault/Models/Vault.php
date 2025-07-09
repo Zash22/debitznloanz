@@ -18,14 +18,6 @@ class Vault extends Model
         'details',
     ];
 
-    /**
-     * Relationship: Vault belongs to a Debit Card.
-     */
-    public function debitCard()
-    {
-        return $this->hasOne(DebitCard::class);
-    }
-
     protected static function newFactory(): VaultFactory
     {
         return VaultFactory::new();

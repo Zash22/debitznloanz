@@ -26,6 +26,8 @@ class LoanService
     {
 
         return DB::transaction(function () use ($data) {
+
+//            dd($data);
             $loan = Loan::create([
                 ...$data,
                 'status' => 'active',

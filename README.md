@@ -12,30 +12,28 @@ To run tests:
 # php artisan test --filter=CreateDebitCardTest
 
 Migrations:
-
 # php artisan migrate --env=testing
 
 To create user:
-
 # php artisan tinker
-
 # \App\Domains\User\Models\User::factory()->create();
 
-Code standard checks:
+To update OpenAPI:
+# php artisan scribe:generate
 
+Documentation URL: '/docs'
+
+Code standard checks:
 # vendor/bin/phpcs --standard=PSR12 app/
+# vendor/bin/phpcs --standard=PSR2 app/
 
 # vendor/bin/phpstan analyse --memory-limit=512M
 
 # vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,design
 
-
 Code standard fixes:
-
 # vendor/bin/phpcbf --standard=PSR12 app/
-
-
-
+# vendor/bin/phpcbf --standard=PSR2 app/
 
 
 ToFix: 
