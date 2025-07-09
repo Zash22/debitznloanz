@@ -17,11 +17,11 @@ class ScheduledPayment extends Model
         'transaction_id',
     ];
 
-//    protected $casts = [
-//        'run_date' => 'date',
-//        'paid' => 'boolean',
-//        'paid_at' => 'datetime',
-//    ];
+    protected $casts = [
+        'run_date' => 'date',
+        'paid' => 'boolean',
+        'paid_at' => 'datetime',
+    ];
 
     protected static function boot()
     {
