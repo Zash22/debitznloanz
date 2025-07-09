@@ -25,7 +25,6 @@ test('it creates a loan', function () {
         'term_amount'      => 2000.00,
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
-        'start_date'       => now()->toDateString(),
     ];
 
     $loan = $this->loanService->createLoan($loanData);
@@ -108,7 +107,6 @@ test('it calculates payments correctly', function () {
         'term_amount'      => 1000.00,
         'principal_amount' => 3000.00,
         'remaining_balance'=> 3000.00,
-        'start_date'       => now()->toDateString(),
     ]);
 
     $payments = $this->loanService->calculatePayments($loan);
@@ -126,7 +124,6 @@ test('it generates monthly payments', function () {
         'term'             => 3,
         'frequency'        => 'monthly',
         'principal_amount' => 3000,
-        'start_date'       => '2025-08-01',
     ]);
 
     $payments = $this->loanService->calculatePayments($loan);
@@ -150,7 +147,6 @@ test('it generates biweekly payments', function () {
         'term'             => 2,
         'frequency'        => 'biweekly',
         'principal_amount' => 2000,
-        'start_date'       => '2025-08-01',
     ]);
 
     $payments = $this->loanService->calculatePayments($loan);
@@ -180,7 +176,6 @@ test('it sets scheduled payment to paid', function () {
         'term_amount'      => 2000.00,
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
-        'start_date'       => '2025-07-08',
     ]);
 
     $runs =[
@@ -233,11 +228,9 @@ test('it sets scheduled payment to paid', function () {
     $transaction = Transaction::factory()->create([
         'user_id'  => $user->id,
         'amount'   => 2000.00,
-        'note'     => '',
         'ref'      => '',
         'paid_at'  => '2025-08-01',
     ]);
-
 
     $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
 
@@ -252,82 +245,36 @@ test('it sets scheduled payment to paid', function () {
 test('update loan balance', function () {
 
     $user = User::factory()->create();
-    $loan = Loan::factory()->create([
+
+    $loanData =[
         'user_id'          => $user->id,
         'term'             => 6,
         'frequency'        => 'monthly',
         'term_amount'      => 2000.00,
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
-        'start_date'       => '2025-07-08',
-    ]);
-
-    $transaction1 = Transaction::factory()->create([
-        'user_id'  => $user->id,
-        'amount'   => 2000.00,
-        'note'     => '',
-        'ref'      => '',
-        'paid_at'  => '2025-08-01',
-    ]);
-
-
-    $transaction2 = Transaction::factory()->create([
-        'user_id'  => $user->id,
-        'amount'   => 2000.00,
-        'note'     => '',
-        'ref'      => '',
-        'paid_at'  => '2025-09-01',
-    ]);
-
-    $runs =[
-        [
-            "run_date" => "2025-08-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
-        [
-            "run_date" => "2025-09-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
-        [
-            "run_date" => "2025-10-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
-        [
-            "run_date" => "2025-11-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
-        [
-            "run_date" => "2025-12-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
-        [
-            "run_date" => "2025-12-01",
-            "amount" => 2000,
-            "paid" => false,
-            "paid_at" => null,
-            "transaction_id" => null,
-        ],
     ];
 
+    $loan = $this->loanService->createLoan($loanData);
+
+    $scheduledPayments = $loan->scheduledPayments()->limit(2)->get();
+
+    foreach ($scheduledPayments as $scheduledPayment) {
+        $transaction = Transaction::factory()->create([
+        'user_id'  => $user->id,
+        'amount'   => 2000.00,
+        'ref' =>  'scheduled_payment_' . $scheduledPayment->id,
+        ]);
+
+        $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
+    }
+
+    $paidCount = $loan->refresh()->scheduledPayments()->where('paid', true)->count();
+
+    expect($paidCount)->toBe(2);
     $this->loanService->updateLoanBalance($loan);
-
-   $this->expect($loan->remaining_balance)->toBe(8000.00);
-
+    $bal = $loan->refresh()->remaining_balance;
+    expect($bal)->toBe(8000);
 });
 
 

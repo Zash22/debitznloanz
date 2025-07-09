@@ -13,12 +13,9 @@ class LoanServiceRepository
         return $scheduledPayment->update(['paid' => true , 'transaction_id' => $transaction->id, 'paid_at' => $transaction->paid_at]);
     }
 
-    public function getLoanPayments(Loan $loan)
+    public function getLoanPayments(Loan $loan): \Illuminate\Database\Eloquent\Collection
     {
-        $loan->scheduledPayments()->where('paid', true)->sum('amount');
-        $loan->scheduledPayments()->where('paid', true)->count();
-
-        $loan->scheduledPayments()->where('paid', false)->sum('amount');
-        $loan->scheduledPayments()->where('paid', false)->count();
+        return $loan->scheduledPayments()->where('paid', true)->get();
     }
+
 }

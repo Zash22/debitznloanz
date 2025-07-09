@@ -4,7 +4,6 @@ namespace Database\Factories;
 
 use App\Domains\Loan\Models\Loan;
 use App\Domains\User\Models\User;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,7 +28,6 @@ class LoanFactory extends Factory
             'term_amount' => 1000.00,
             'principal_amount' => 6000.00,
             'remaining_balance' => 6000.00,
-            'start_date' => Carbon::now()->startOfMonth()->toDateString(),
         ];
     }
 }

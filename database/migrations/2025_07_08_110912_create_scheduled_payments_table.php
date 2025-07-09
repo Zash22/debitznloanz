@@ -13,7 +13,7 @@ return new class extends Migration {
             $table->decimal('amount', 12, 2);
             $table->boolean('paid')->default(false);
             $table->timestamp('paid_at')->nullable();
-            $table->foreignId('transaction_id')->nullable()->constrained('transactions')->nullOnDelete();
+            $table->foreignId('transaction_id')->nullable();
             $table->timestamps();
         });
     }

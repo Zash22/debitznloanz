@@ -1,53 +1,117 @@
-# debitznloanz
+# 💳 Debitznloanz
 
-Tests use SQLite
+A domain-driven Laravel application for managing debit cards, loans, and scheduled payments.
 
-To start api:
-# php artisan serve
+---
 
-To create tests:
-# php artisan make:test Domains/PaymentMethods/DebitCard/Feature/ListDebitCardsTest --pest
+## 🚀 Getting Started
 
-To run tests:
-# php artisan test --filter=CreateDebitCardTest
+### Serve the API
+```bash
+composer install
+php artisan migrate --env=testing
+php artisan serve
+````
 
-Migrations:
+---
 
-# php artisan migrate --env=testing
+## 🧪 Testing
 
-To create user:
+### Use SQLite for Tests
 
-# php artisan tinker
+**Run a specific test:**
 
-# \App\Domains\User\Models\User::factory()->create();
+```bash
+php artisan test --filter=CreateDebitCardTest
+```
 
-Code standard checks:
+**Generate a new test (using Pest):**
 
-# vendor/bin/phpcs --standard=PSR12 app/
+```bash
+php artisan make:test Domains/PaymentMethods/DebitCard/Feature/ListDebitCardsTest --pest
+```
 
-# vendor/bin/phpstan analyse --memory-limit=512M
+**Run migrations for testing:**
 
-# vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,design
+```bash
+php artisan migrate --env=testing
+```
 
+---
 
-Code standard fixes:
+## 👤 Bearer Token Generation
 
-# vendor/bin/phpcbf --standard=PSR12 app/
+```bash
+php artisan tinker
+```
+```php
+$user- = \App\Domains\User\Models\User::factory()->create();
+return $user->createToken('token_name')->plainTextToken;
+```
 
+---
 
+## 📚 API Documentation
 
+**Generate OpenAPI docs with Scribe:**
 
+```bash
+php artisan scribe:generate
+```
 
-ToFix: 
+**View Documentation:**
 
-uses(RefreshDatabase::class);
-create a cast for vault details to encrypt.
-create repository for vault
-generate new app key for test env
-policy for viewAll DebitCard
-UUID for card and user in urls and payload
-Move migrations and factories to domains
-statuses for loans and scheduled runs
+* URL: `/docs`
 
+---
 
+## 🧹 Code Quality
 
+### Code Standards
+
+**Check code style:**
+
+```bash
+vendor/bin/phpcs --standard=PSR12 app/
+vendor/bin/phpcs --standard=PSR2 app/
+```
+
+**Fix code style automatically:**
+
+```bash
+vendor/bin/phpcbf --standard=PSR12 app/
+vendor/bin/phpcbf --standard=PSR2 app/
+```
+
+### Static Analysis & Linting
+
+```bash
+vendor/bin/phpstan analyse --memory-limit=512M
+vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,design
+```
+
+---
+
+## 🛠️ To Fix / Improve
+
+* [ ] Use `RefreshDatabase::class` in test setup
+* [ ] Create a mutator for vault details encryption
+* [ ] Create a repository for vault access
+  *In real-world apps, consider services like AWS KMS or HashiCorp Vault*
+* [ ] Add policy for `viewAll` DebitCard action
+* [ ] Use UUIDs for card and user in URLs and payloads
+* [ ] Move migrations and factories into their respective Domain folders
+* [ ] Define status flow for loans and scheduled runs
+* [ ] Implement autoloading for domain-based structure
+* [ ] Improve date handling
+* [ ] Add input validation to `LoanService`
+* [ ] Configure Scribe properly for accurate documentation
+* [ ] Extract scheduled payment logic into its own service
+* [ ] Extract payment calculation logic into its own service
+* [ ] Correct data types eg . `amount` should be `decimal`
+* [ ] Use standard naming eg 'ref' abd 'reference'
+* [ ] Apply code style formatter to all files
+* [ ] Add more tests, aim for 100% coverage
+* [ ] Add more tests to test for negative scenarios
+
+---

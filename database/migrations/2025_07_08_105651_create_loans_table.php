@@ -14,7 +14,6 @@ return new class extends Migration {
             $table->decimal('term_amount', 12, 2);
             $table->decimal('principal_amount', 12, 2);
             $table->decimal('remaining_balance', 12, 2);
-            $table->date('start_date');
             $table->timestamps();
         });
     }
