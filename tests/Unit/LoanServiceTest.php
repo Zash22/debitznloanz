@@ -2,6 +2,7 @@
 
 use App\Domains\Loan\Models\Loan;
 use App\Domains\Transaction\Models\Transaction;
+use App\Domains\Transaction\Services\TransactionService;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
@@ -12,7 +13,8 @@ uses(Tests\TestCase::class);
 //uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->loanService = new LoanService(new LoanServiceRepository());
+    $this->transactionService = new TransactionService();
+    $this->loanService = new LoanService(new LoanServiceRepository(), $this->transactionService);
 });
 
 test('it creates a loan', function () {
@@ -29,11 +31,8 @@ test('it creates a loan', function () {
 
     $loan = $this->loanService->createLoan($loanData);
 
-
-
     expect($loan)->toBeInstanceOf(Loan::class);
     expect($loan->scheduledPayments)->toBeInstanceOf(Collection::class);
-
 
     $this->assertDatabaseHas('loans', [
         'id'               => $loan->id,
@@ -167,7 +166,6 @@ test('it generates biweekly payments', function () {
 });
 
 test('it sets scheduled payment to paid', function () {
-
     $user = User::factory()->create();
     $loan = Loan::factory()->create([
         'user_id'          => $user->id,
@@ -177,8 +175,7 @@ test('it sets scheduled payment to paid', function () {
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
     ]);
-
-    $runs =[
+    $runs = [
         [
             "run_date" => "2025-08-01",
             "amount" => 2000,
@@ -222,31 +219,24 @@ test('it sets scheduled payment to paid', function () {
             "transaction_id" => null,
         ],
     ];
-
     $this->loanService->saveScheduledPayments($loan->id, $runs);
-
+    $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
     $transaction = Transaction::factory()->create([
         'user_id'  => $user->id,
         'amount'   => 2000.00,
-        'ref'      => '',
+        'ref'      => 'scheduled_payment_' . $scheduledPayment->id,
         'paid_at'  => '2025-08-01',
     ]);
 
-    $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
-
     $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
-
     $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
-
     expect($scheduledPayment->paid)->toBeTrue();
     expect($scheduledPayment->paid_at->toDateString())->toBe('2025-08-01');
 });
 
 test('update loan balance', function () {
-
     $user = User::factory()->create();
-
-    $loanData =[
+    $loanData = [
         'user_id'          => $user->id,
         'term'             => 6,
         'frequency'        => 'monthly',
@@ -254,27 +244,58 @@ test('update loan balance', function () {
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
     ];
-
     $loan = $this->loanService->createLoan($loanData);
-
     $scheduledPayments = $loan->scheduledPayments()->limit(2)->get();
-
     foreach ($scheduledPayments as $scheduledPayment) {
         $transaction = Transaction::factory()->create([
-        'user_id'  => $user->id,
-        'amount'   => 2000.00,
-        'ref' =>  'scheduled_payment_' . $scheduledPayment->id,
+            'user_id'  => $user->id,
+            'amount'   => 2000.00,
+            'ref'      => 'scheduled_payment_' . $scheduledPayment->id,
         ]);
-
         $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
     }
-
     $paidCount = $loan->refresh()->scheduledPayments()->where('paid', true)->count();
-
     expect($paidCount)->toBe(2);
     $this->loanService->updateLoanBalance($loan);
     $bal = $loan->refresh()->remaining_balance;
     expect($bal)->toBe(8000);
+});
+test('it verifies transaction before updating scheduled payment', function () {
+    $user = User::factory()->create();
+    $loan = Loan::factory()->create([
+        'user_id' => $user->id,
+        'remaining_balance' => 12000.00,
+    ]);
+    $scheduledPayment = $loan->scheduledPayments()->create([
+        'amount' => 2000.00,
+        'run_date' => '2025-08-01',
+    ]);
+    $transaction = Transaction::factory()->create([
+        'user_id' => $user->id,
+        'amount' => 2000.00,
+        'ref' => 'scheduled_payment_' . $scheduledPayment->id,
+    ]);
+    $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
+    expect($scheduledPayment->refresh()->paid)->toBeTrue();
+});
+test('it throws exception when transaction verification fails', function () {
+    $user = User::factory()->create();
+    $loan = Loan::factory()->create([
+        'user_id' => $user->id,
+        'remaining_balance' => 12000.00,
+    ]);
+    $scheduledPayment = $loan->scheduledPayments()->create([
+        'amount' => 2000.00,
+        'run_date' => '2025-08-01',
+    ]);
+    $transaction = Transaction::factory()->create([
+        'user_id' => $user->id,
+        'amount' => 2000.00,
+        'ref' => 'scheduled_payment_999_3',
+    ]);
+
+    expect(fn() => $this->loanService->updateScheduledPayment($transaction, $scheduledPayment))
+        ->toThrow(\Exception::class, 'Invalid transaction for scheduled payment');
 });
 
 
