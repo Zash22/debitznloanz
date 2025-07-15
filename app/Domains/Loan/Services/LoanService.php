@@ -29,31 +29,15 @@ class LoanService
      */
     public function createLoan(array $data)
     {
-
         return DB::transaction(function () use ($data) {
-
             $loan = Loan::create([
                 ...$data,
                 'status' => 'active',
             ]);
-
             $this->saveScheduledPayments($loan->id, $this->calculatePayments($loan));
-
             return $loan->refresh();
         });
     }
-
-    public function saveScheduledPayments($loadId, $payments): void
-    {
-        foreach ($payments as $payment) {
-            ScheduledPayment::create([
-                'loan_id' => $loadId,
-                'amount' => $payment['amount'],
-                'run_date' => $payment['run_date'],
-            ]);
-        }
-    }
-
     public function calculatePayments(Loan $loan): array
     {
         $payments = [];
@@ -79,35 +63,50 @@ class LoanService
 
         return $payments;
     }
-
+    public function saveScheduledPayments($loadId, $payments): void
+    {
+        foreach ($payments as $payment) {
+            ScheduledPayment::create([
+                'loan_id' => $loadId,
+                'amount' => $payment['amount'],
+                'run_date' => $payment['run_date'],
+            ]);
+        }
+    }
     public function updateScheduledPayment(Transaction $transaction, ScheduledPayment $scheduledPayment)
     {
-        $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
-    }
-
-    public function updateLoanBalance(Loan $loan)
-    {
-        $payments = $this->loanServiceRepository->getLoanPayments($loan);
-
-        foreach ($payments as $payment) {
-
-            if (is_null(TransactionTracking::where('transaction_id', $payment->transaction_id)
-                ->where('reference', 'scheduled_payment_' . $payment->id))) {
-
-                abort(422, 'payments need audit');
+        return DB::transaction(function () use ($transaction, $scheduledPayment) {
+            // Verify transaction tracking exists
+            if (!$this->transactionService->verifyTransaction(
+                'scheduled_payment_' . $scheduledPayment->id,
+                $scheduledPayment->amount
+            )) {
+                throw new \Exception('Invalid transaction for scheduled payment');
             }
 
-        }
+            $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
 
-        $balance = $loan->remaining_balance - $payments->sum('amount');
-
-        $loan->remaining_balance = $balance;
-        $loan->save();
+            return $scheduledPayment->refresh();
+        });
     }
-
-    public function getLoanById($id)
+    public function updateLoanBalance(Loan $loan)
     {
-        return Loan::find($id);
+        return DB::transaction(function () use ($loan) {
+            $payments = $this->loanServiceRepository->getLoanPayments($loan);
+            foreach ($payments as $payment) {
+                if (!$this->transactionService->getTransactionByReference(
+                    'scheduled_payment_' . $payment->id
+                )) {
+                    abort(422, 'payments need audit');
+                }
+            }
+            $balance = $loan->remaining_balance - $payments->sum('amount');
+
+            $loan->remaining_balance = $balance;
+            $loan->save();
+
+            return $loan;
+        });
     }
 
 }
