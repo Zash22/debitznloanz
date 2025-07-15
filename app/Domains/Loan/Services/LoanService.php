@@ -7,18 +7,21 @@ use App\Domains\Loan\Models\ScheduledPayment;
 use App\Domains\Loan\Repositories\LoanServiceRepository;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Models\TransactionTracking;
+use App\Domains\Transaction\Services\TransactionService;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class LoanService
 {
     protected LoanServiceRepository $loanServiceRepository;
-
-    public function __construct(LoanServiceRepository $loanServiceRepository)
-    {
+    protected TransactionService $transactionService;
+    public function __construct(
+        LoanServiceRepository $loanServiceRepository,
+        TransactionService $transactionService
+    ) {
         $this->loanServiceRepository = $loanServiceRepository;
+        $this->transactionService = $transactionService;
     }
-
     /**
      * Create a new loan.
      *

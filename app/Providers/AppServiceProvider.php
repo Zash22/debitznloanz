@@ -30,6 +30,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Domains\Loan\Services\LoanService::class,
             \App\Domains\Loan\Services\LoanService::class
         );
+        $this->app->bind(
+            \App\Domains\Transaction\Services\TransactionService::class,
+            \App\Domains\Transaction\Services\TransactionService::class
+        );
     }
 
     /**
