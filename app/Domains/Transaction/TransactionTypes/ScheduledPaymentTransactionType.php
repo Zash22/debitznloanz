@@ -56,7 +56,7 @@ class ScheduledPaymentTransactionType implements TransactionStrategy
         }
     }
 
-    public function createOriginatingTransaction(array $scheduledPayments): void
+    public function createOriginatingTransaction(array $scheduledPayments): mixed
     {
         foreach ($scheduledPayments['payments'] as $payment) {
             ScheduledPayment::create([
@@ -65,7 +65,7 @@ class ScheduledPaymentTransactionType implements TransactionStrategy
                 'run_date' => $payment['run_date'],
             ]);
         }
-
+        return true;
     }
 
     public function getValidator(): TransactionTypeValidator

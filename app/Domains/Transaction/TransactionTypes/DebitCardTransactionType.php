@@ -3,10 +3,11 @@
 namespace App\Domains\Transaction\TransactionTypes;
 
 use App\Domains\Transaction\Contracts\TransactionStrategy;
+use App\Domains\Transaction\Models\DebitCardTransaction;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;
-use App\Domains\PaymentMethod\DebitCard\Models\DebitCardTransaction;
 use App\Domains\Transaction\Validators\DebitCardTransactionValidator;
+use App\Domains\User\Models\User;
 
 class DebitCardTransactionType implements TransactionStrategy
 {
@@ -49,8 +50,10 @@ class DebitCardTransactionType implements TransactionStrategy
         return new DebitCardTransactionValidator();
     }
 
-    public function createOriginatingTransaction(array $array): void
+    public function createOriginatingTransaction(array $array): mixed
     {
+        return DebitCardTransaction::create($array);
+    }
 
     public function getOriginatingTransactions(int $user_id): mixed
     {

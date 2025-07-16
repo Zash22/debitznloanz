@@ -2,9 +2,9 @@
 
 namespace App\Domains\Transaction\Controllers;
 
-use App\Domains\PaymentMethod\DebitCard\Resources\DebitCardResource;
 use App\Domains\Transaction\Factories\TransactionTypeFactory;
 use App\Domains\Transaction\Requests\CreateDebitCardTransactionRequest;
+use App\Domains\Transaction\Resources\DebitCardTransactionResource;
 use App\Domains\Transaction\Services\TransactionService;
 use App\Domains\Transaction\TransactionTypes\DebitCardTransactionType;
 use App\Http\Controllers\Controller;
@@ -36,18 +36,17 @@ class DebitCardTransactionController extends Controller
     }
 
 
-    public function store(CreateDebitCardTransactionRequest $request): JsonResponse
+    public function store(CreateDebitCardTransactionRequest $request): DebitCardTransactionResource
     {
         $validated = $request->validated();
 
-        $result = $this->transactionService->createOriginatingTransaction(
+        $transaction = $this->transactionService->createOriginatingTransaction(
             'debit_card',
             $validated
         );
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $result
-        ]);
+//        dd($transaction);
+
+        return new DebitCardTransactionResource($transaction);
     }
 }
