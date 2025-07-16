@@ -72,4 +72,9 @@ class ScheduledPaymentTransactionType implements TransactionStrategy
     {
         // TODO: Implement getValidator() method.
     }
+
+    public function getOriginatingTransactions(int $id): mixed
+    {
+        // TODO: Implement getOriginatingTransactions() method.
+    }
 }

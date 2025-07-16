@@ -52,5 +52,9 @@ class DebitCardTransactionType implements TransactionStrategy
     public function createOriginatingTransaction(array $array): void
     {
 
+    public function getOriginatingTransactions(int $user_id): mixed
+    {
+        $user = User::find($user_id);
+        return $user->debit_card_transactions;
     }
 }

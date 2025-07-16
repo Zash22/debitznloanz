@@ -94,4 +94,10 @@ class TransactionService
         $strategy = $this->factory->make($type, $data); // ✅ Validation happens here
         return $strategy->createOriginatingTransaction($data);
     }
+
+    public function getOriginatingTransactions(string $type, int $id)
+    {
+        $strategy = $this->factory->make($type);
+        return $strategy->getOriginatingTransactions($id);
+    }
 }
