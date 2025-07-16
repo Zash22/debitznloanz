@@ -34,6 +34,17 @@ class AppServiceProvider extends ServiceProvider
             \App\Domains\Transaction\Services\TransactionService::class,
             \App\Domains\Transaction\Services\TransactionService::class
         );
+
+        $this->app->bind(
+            \App\Domains\Transaction\Contracts\TransactionStrategy::class,
+            \App\Domains\Transaction\TransactionTypes\DebitCardTransactionType::class
+        );
+
+        $this->app->bind(
+            \App\Domains\Transaction\Contracts\TransactionStrategy::class,
+            \App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType::class
+        );
+
     }
 
     /**
