@@ -20,7 +20,7 @@ class TransactionTypeFactory
         }
 
         if ($debitCardTransactionType) {
-            $this->strategies['debit_card_transaction'] = $debitCardTransactionType;
+            $this->strategies['debit_card'] = $debitCardTransactionType;
         }
     }
 
