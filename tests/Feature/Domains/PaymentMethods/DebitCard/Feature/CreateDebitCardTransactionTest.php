@@ -12,7 +12,7 @@ it('allows an authenticated user to create a debit card', closure: function () {
     $user = User::factory()->create();
 
     $debit_card = DebitCard::factory()->create();
-
+    
     $payload = [
         'debit_card_id' =>  $debit_card->id,
         'amount' => 30.00,
