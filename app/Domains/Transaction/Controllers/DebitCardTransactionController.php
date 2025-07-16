@@ -28,12 +28,12 @@ class DebitCardTransactionController extends Controller
         );
     }
 
-//    public function index(Request $request): AnonymousResourceCollection
-//    {
-//        return DebitCardResource::collection(
-//            $this->service->getUserDebitCards($request->user()->id)
-//        );
-//    }
+    public function index(Request $request): AnonymousResourceCollection
+    {
+        return DebitCardTransactionResource::collection(
+            $this->transactionService->getOriginatingTransactions('debit_card', $request->user()->id)
+        );
+    }
 
 
     public function store(CreateDebitCardTransactionRequest $request): JsonResponse
