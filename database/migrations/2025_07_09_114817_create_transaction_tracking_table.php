@@ -10,7 +10,7 @@ return new class extends Migration {
         Schema::create('transaction_tracking', function (Blueprint $table) {
             $table->id();
             $table->foreignId('transaction_id')->nullable();
-            $table->string('reference');
+            $table->string('transaction_reference');
             $table->timestamps();
         });
     }
