@@ -14,9 +14,9 @@ class CreateDebitCardTransactionRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'debit_card_id' => ['required', 'string', 'digits_between:12,19'],
-            'amount' => ['required', 'integer', 'between:1,12'],
-            'payment_reference' => ['required', 'integer', 'between:1,12'],
+            'debit_card_id' => ['required', 'integer'],
+            'amount' => ['required', 'numeric', 'min:0', 'regex:/^\d+(\.\d{1,2})?$/'],
+            'payment_reference' => ['required', 'string'],
         ];
     }
 
@@ -29,7 +29,7 @@ class CreateDebitCardTransactionRequest extends FormRequest
             'payment_reference.string' => 'The payment reference must be a string',
 
             'amount.required' => 'Payment amount is required.',
-            'amount.float' => 'Payment amount must be a float value',
+            'amount.numeric' => 'Payment amount must be a decimal value',
         ];
     }
 }
