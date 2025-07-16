@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Domains\Transaction\Contracts;
+
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Validators\TransactionTypeValidator;
 

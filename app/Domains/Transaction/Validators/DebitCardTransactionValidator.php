@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Domains\Transaction\Validators;
 
 use Illuminate\Support\Facades\Validator;

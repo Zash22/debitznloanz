@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Domains\Transaction\TransactionTypes;
+
 use App\Domains\Transaction\Contracts\TransactionStrategy;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;

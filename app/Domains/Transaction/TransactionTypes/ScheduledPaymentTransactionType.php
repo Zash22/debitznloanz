@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Domains\Transaction\TransactionTypes;
+
 use App\Domains\Transaction\Contracts\TransactionStrategy;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;
@@ -42,7 +44,7 @@ class ScheduledPaymentTransactionType implements TransactionStrategy
         return self::TYPE;
     }
 
-    public function store (array $scheduledPayments): void
+    public function store(array $scheduledPayments): void
     {
 
         foreach ($scheduledPayments['payments'] as $payment) {
@@ -52,7 +54,6 @@ class ScheduledPaymentTransactionType implements TransactionStrategy
                 'run_date' => $payment['run_date'],
             ]);
         }
-
     }
 
     public function createOriginatingTransaction(array $scheduledPayments): void

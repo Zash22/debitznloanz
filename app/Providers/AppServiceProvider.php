@@ -49,7 +49,6 @@ class AppServiceProvider extends ServiceProvider
             \App\Domains\Transaction\Contracts\TransactionStrategy::class,
             \App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType::class
         );
-
     }
 
     /**

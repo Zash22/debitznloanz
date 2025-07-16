@@ -35,7 +35,6 @@ class Transaction extends Model
 
             TransactionTracking::where('transaction_reference', $transaction->transaction_ref)
                 ->update(['transaction_id' => $transaction->id]);
-
         });
     }
 

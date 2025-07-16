@@ -1,15 +1,18 @@
 <?php
+
 namespace App\Domains\Transaction\Services;
 
 use App\Domains\Transaction\Factories\TransactionTypeFactory;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Models\TransactionTracking;
 use Illuminate\Support\Facades\DB;
+
 class TransactionService
 {
     public function __construct(
         protected TransactionTypeFactory $factory
-    ) {}
+    ) {
+    }
 
 
     public function processTransaction(string $type, array $data): Transaction
@@ -86,7 +89,8 @@ class TransactionService
         return (float)$tracking->transaction->amount == $expectedAmount;
     }
 
-    public function createOriginatingTransaction(string $type, array $data) {
+    public function createOriginatingTransaction(string $type, array $data)
+    {
         $strategy = $this->factory->make($type, $data); // ✅ Validation happens here
         return $strategy->createOriginatingTransaction($data);
     }

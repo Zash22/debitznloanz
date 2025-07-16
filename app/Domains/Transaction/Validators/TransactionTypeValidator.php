@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Domains\Transaction\Validators;
 
 interface TransactionTypeValidator

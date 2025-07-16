@@ -17,5 +17,4 @@ class LoanServiceRepository
     {
         return $loan->scheduledPayments()->where('paid', true)->get();
     }
-
 }

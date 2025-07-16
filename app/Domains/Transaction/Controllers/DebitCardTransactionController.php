@@ -51,4 +51,3 @@ class DebitCardTransactionController extends Controller
         ]);
     }
 }
-
