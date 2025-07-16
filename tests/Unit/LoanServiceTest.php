@@ -7,19 +7,25 @@ use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
 use App\Domains\Loan\Repositories\LoanServiceRepository;
-//use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
+use App\Domains\Transaction\Factories\TransactionTypeFactory;
 
 uses(Tests\TestCase::class);
 //uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $this->transactionService = new TransactionService();
+    $transactionTypeFactory = new TransactionTypeFactory(
+        new TransactionService(new TransactionTypeFactory()),
+        new ScheduledPaymentTransactionType(new TransactionService(new TransactionTypeFactory()))
+    );
+
+    $this->transactionService = new TransactionService($transactionTypeFactory);
+    $scheduledPaymentTransaction = new ScheduledPaymentTransactionType($this->transactionService);
     $this->loanService = new LoanService(new LoanServiceRepository(), $this->transactionService);
 });
 
 test('it creates a loan', function () {
     $user = User::factory()->create();
-
     $loanData = [
         'user_id'          => $user->id,
         'term'             => 6,
@@ -28,12 +34,9 @@ test('it creates a loan', function () {
         'principal_amount' => 12000.00,
         'remaining_balance' => 12000.00,
     ];
-
     $loan = $this->loanService->createLoan($loanData);
-
     expect($loan)->toBeInstanceOf(Loan::class);
     expect($loan->scheduledPayments)->toBeInstanceOf(Collection::class);
-
     $this->assertDatabaseHas('loans', [
         'id'               => $loan->id,
         'user_id'          => $user->id,
@@ -79,7 +82,10 @@ test('it creates scheduled payments', function () {
         ]
     ];
 
-    $this->loanService->saveScheduledPayments($loan->id, $data);
+    $this->transactionService->createOriginatingTransaction('scheduled_payment', [
+        'payments' => $data,
+        'loan_id' => $loan->id
+    ]);
 
     $scheduledRuns = $loan->scheduledPayments()->get();
 
@@ -219,7 +225,8 @@ test('it sets scheduled payment to paid', function () {
             "transaction_id" => null,
         ],
     ];
-    $this->loanService->saveScheduledPayments($loan->id, $runs);
+
+    $this->transactionService->createOriginatingTransaction('scheduled_payment', ['payments' => $runs , 'loan_id' => $loan->id] );
     $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
     $transaction = Transaction::factory()->create([
         'user_id'  => $user->id,
@@ -229,6 +236,7 @@ test('it sets scheduled payment to paid', function () {
     ]);
 
     $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
+
     $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
     expect($scheduledPayment->paid)->toBeTrue();
     expect($scheduledPayment->paid_at->toDateString())->toBe('2025-08-01');

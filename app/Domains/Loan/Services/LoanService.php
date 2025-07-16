@@ -6,7 +6,6 @@ use App\Domains\Loan\Models\Loan;
 use App\Domains\Loan\Models\ScheduledPayment;
 use App\Domains\Loan\Repositories\LoanServiceRepository;
 use App\Domains\Transaction\Models\Transaction;
-use App\Domains\Transaction\Models\TransactionTracking;
 use App\Domains\Transaction\Services\TransactionService;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
@@ -22,10 +21,10 @@ class LoanService
         $this->loanServiceRepository = $loanServiceRepository;
         $this->transactionService = $transactionService;
     }
+
     /**
-     * Create a new loan.
-     *
      * @param array $data
+     * @return mixed
      */
     public function createLoan(array $data)
     {
@@ -34,7 +33,11 @@ class LoanService
                 ...$data,
                 'status' => 'active',
             ]);
-            $this->saveScheduledPayments($loan->id, $this->calculatePayments($loan));
+            $payments = $this->calculatePayments($loan);
+            $this->transactionService->createOriginatingTransaction('scheduled_payment', [
+                'payments' => $payments,
+                'loan_id' => $loan->id
+            ]);
             return $loan->refresh();
         });
     }
@@ -60,18 +63,7 @@ class LoanService
             }
         }
 
-
         return $payments;
-    }
-    public function saveScheduledPayments($loadId, $payments): void
-    {
-        foreach ($payments as $payment) {
-            ScheduledPayment::create([
-                'loan_id' => $loadId,
-                'amount' => $payment['amount'],
-                'run_date' => $payment['run_date'],
-            ]);
-        }
     }
     public function updateScheduledPayment(Transaction $transaction, ScheduledPayment $scheduledPayment)
     {
