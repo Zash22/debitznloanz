@@ -1,16 +1,30 @@
 <?php
 
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
+use App\Domains\Transaction\Services\TransactionService;
+use App\Domains\Transaction\Factories\TransactionTypeFactory;
+use App\Domains\User\Models\User;
 use function Pest\Laravel\actingAs;
 
-//uses(RefreshDatabase::class);
+it('allows an authenticated user to create a debit card', closure: function () {
 
-it('can create transaction for debit card', closure: function () {
-    $response = $this->post('/api/debit-card-transactions');
-    $response->assertStatus(200);
+    /** @var User $user */
+    $user = User::factory()->create();
 
+    $debit_card = DebitCard::factory()->create();
+
+    $payload = [
+        'debit_card_id' =>  $debit_card->id,
+        'amount' => 30.00,
+        'payment_reference' => 'for loan 123',
+    ];
+
+    actingAs($user)
+        ->postJson('/api/debit-card-transactions', $payload)
+        ->assertCreated()
+        ->assertJsonPath('data.display_name', 'test-create-card');
+
+    expect(DebitCard::where('user_id', $user->id)->exists())->toBeTrue();
 });
 
-it('fails to create a debit card transaction due to invalid payload', function () {
 
-});
