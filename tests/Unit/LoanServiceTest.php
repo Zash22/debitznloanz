@@ -224,7 +224,7 @@ test('it sets scheduled payment to paid', function () {
     $transaction = Transaction::factory()->create([
         'user_id'  => $user->id,
         'amount'   => 2000.00,
-        'ref'      => 'scheduled_payment_' . $scheduledPayment->id,
+        'transaction_ref'      => 'scheduled_payment_' . $scheduledPayment->id,
         'paid_at'  => '2025-08-01',
     ]);
 
@@ -250,7 +250,7 @@ test('update loan balance', function () {
         $transaction = Transaction::factory()->create([
             'user_id'  => $user->id,
             'amount'   => 2000.00,
-            'ref'      => 'scheduled_payment_' . $scheduledPayment->id,
+            'transaction_ref'      => 'scheduled_payment_' . $scheduledPayment->id,
         ]);
         $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
     }
@@ -273,7 +273,7 @@ test('it verifies transaction before updating scheduled payment', function () {
     $transaction = Transaction::factory()->create([
         'user_id' => $user->id,
         'amount' => 2000.00,
-        'ref' => 'scheduled_payment_' . $scheduledPayment->id,
+        'transaction_ref' => 'scheduled_payment_' . $scheduledPayment->id,
     ]);
     $this->loanService->updateScheduledPayment($transaction, $scheduledPayment);
     expect($scheduledPayment->refresh()->paid)->toBeTrue();
@@ -291,7 +291,7 @@ test('it throws exception when transaction verification fails', function () {
     $transaction = Transaction::factory()->create([
         'user_id' => $user->id,
         'amount' => 2000.00,
-        'ref' => 'scheduled_payment_999_3',
+        'transaction_ref' => 'scheduled_payment_999_3',
     ]);
 
     expect(fn() => $this->loanService->updateScheduledPayment($transaction, $scheduledPayment))
