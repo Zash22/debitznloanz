@@ -29,7 +29,7 @@ class ScheduledPayment extends Model
         static::created(function ($scheduledPayment) {
                 TransactionTracking::create([
                     'transaction_id' => null,
-                    'reference' => 'scheduled_payment_' . $scheduledPayment->id,
+                    'transaction_reference' => 'scheduled_payment_' . $scheduledPayment->id,
                 ]);
         });
     }

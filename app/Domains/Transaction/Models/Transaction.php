@@ -19,7 +19,7 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'amount',
-        'ref',
+        'transaction_ref',
         'paid_at',
     ];
 
@@ -33,9 +33,8 @@ class Transaction extends Model
         parent::boot();
         static::created(function ($transaction) {
 
-            TransactionTracking::where('reference', $transaction->ref)
+            TransactionTracking::where('transaction_reference', $transaction->transaction_ref)
                 ->update(['transaction_id' => $transaction->id]);
-
         });
     }
 

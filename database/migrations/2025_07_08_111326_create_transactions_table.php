@@ -10,7 +10,7 @@ return new class extends Migration {
             $table->id('id');
             $table->foreignId('user_id');
             $table->decimal('amount', 12, 2);
-            $table->text('ref')->nullable();
+            $table->text('transaction_ref');
             $table->timestamp('paid_at');
             $table->timestamps();
         });
