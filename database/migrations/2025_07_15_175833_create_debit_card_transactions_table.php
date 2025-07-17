@@ -6,19 +6,17 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration {
     public function up(): void {
-        Schema::create('scheduled_payments', function (Blueprint $table) {
+        Schema::create('debit_card_transactions', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('loan_id')->constrained();
-            $table->date('run_date');
+            $table->foreignId('debit_card_id')->constrained();
             $table->decimal('amount', 12, 2);
-            $table->boolean('paid')->default(false);
-            $table->timestamp('paid_at')->nullable();
+            $table->string('payment_reference');
             $table->foreignId('transaction_id')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void {
-        Schema::dropIfExists('scheduled_payments');
+        Schema::dropIfExists('debit_card_transactions');
     }
 };

@@ -110,8 +110,19 @@ vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,des
 * [ ] Extract payment calculation logic into its own service
 * [ ] Correct data types eg . `amount` should be `decimal`
 * [ ] Use standard naming eg 'ref' abd 'reference'
-* [ ] Apply code style formatter to all files
 * [ ] Add more tests, aim for 100% coverage
-* [ ] Add more tests to test for negative scenarios
+* [ ] Remove unused functions from transactionStratey, TransactionService and both transaction types
+* [ ] Implement the debitCardvalidator and create scheduledPayments validator
+* [ ] Decide on file structure for Transaction domain
+* [ ] Move all models, requests, resources related to transaction types to transactions domain
+* [ ] Refactor directy structure of feature tests 
+* [ ] Implement repository pattern for transaction domain
+* [ ] Implement repository pattern for transaction domain
+* [ ] Implement Eloquent's pivot table for transaction_tracking
+* [ ] Implement Eloquent's pivot table for transaction_tracking with polymorphism
+* [ ] Make TransactionTypeFactory register strategies dynamic, run once and then cached
+* [ ] Create helper functions for date and number formatting
+* [ ] Add logging
+
 
 ---

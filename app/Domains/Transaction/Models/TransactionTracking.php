@@ -10,7 +10,7 @@ class TransactionTracking extends Model
     protected $table = 'transaction_tracking';
     protected $fillable = [
         'transaction_id',
-        'reference',
+        'transaction_reference',
     ];
     /**
      * Get the transaction that owns the tracking record.
