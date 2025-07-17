@@ -1,0 +1,30 @@
+includes:
+    - ./vendor/larastan/larastan/extension.neon
+
+parameters:
+    level: 5
+
+    paths:
+        - app
+        - routes
+        - database
+        - tests
+
+    excludePaths:
+        - bootstrap/cache/*
+        - database/migrations/*
+        - tests/Feature/stubs/*
+        - app/Console/Commands/stubs/*
+
+    # Allow Laravel magic calls, container bindings, facades, etc.
+    ignoreErrors:
+        - '#Call to an undefined method Illuminate\\.*#'
+        - '#Access to an undefined property Illuminate\\.*#'
+
+    reportUnmatchedIgnoredErrors: true
+
+    inferPrivatePropertyTypeFromConstructor: true
+
+    # Autoload Laravel’s bootstrap file
+    bootstrapFiles:
+        - bootstrap/app.php

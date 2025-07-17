@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel Project Coding Standards">
+    <!-- Base standard -->
+    <rule ref="PSR12" />
+
+    <file>app</file>
+    <file>routes</file>
+    <file>database</file>
+    <file>tests</file>
+
+    <exclude-pattern>*/storage/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+
+    <config name="php_version" value="80000"/>
+
+    <arg name="colors"/>
+    <arg name="show-progress"/>
+
+    <arg name="report" value="full"/>
+</ruleset>
