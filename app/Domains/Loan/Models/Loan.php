@@ -20,13 +20,7 @@ class Loan extends Model
         'term_amount',
         'principal_amount',
         'remaining_balance',
-        'start_date',
     ];
-
-    protected $casts = [
-        'start_date' => 'date',
-    ];
-
     public function user(): BelongsTo
     {
         return $this->belongsTo(\App\Domains\User\Models\User::class);

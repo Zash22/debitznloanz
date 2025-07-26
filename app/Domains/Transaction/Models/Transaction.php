@@ -19,8 +19,7 @@ class Transaction extends Model
     protected $fillable = [
         'user_id',
         'amount',
-        'note',
-        'ref',
+        'transaction_ref',
         'paid_at',
     ];
 
@@ -28,6 +27,16 @@ class Transaction extends Model
         'amount' => 'decimal:2',
         'paid_at' => 'datetime',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+        static::created(function ($transaction) {
+
+            TransactionTracking::where('transaction_reference', $transaction->transaction_ref)
+                ->update(['transaction_id' => $transaction->id]);
+        });
+    }
 
     public function user(): BelongsTo
     {

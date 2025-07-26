@@ -8,10 +8,9 @@ return new class extends Migration {
     public function up(): void {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id('id');
-            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
+            $table->foreignId('user_id');
             $table->decimal('amount', 12, 2);
-            $table->text('note')->nullable();
-            $table->text('ref')->nullable();
+            $table->text('transaction_ref');
             $table->timestamp('paid_at');
             $table->timestamps();
         });
