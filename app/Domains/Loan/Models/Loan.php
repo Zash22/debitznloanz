@@ -28,7 +28,7 @@ class Loan extends Model
 
     public function scheduledPayments(): HasMany
     {
-        return $this->hasMany(ScheduledPayment::class);
+        return $this->hasMany(\App\Domains\Transaction\Models\ScheduledPayment::class);
     }
 
     public function transactions(): HasMany

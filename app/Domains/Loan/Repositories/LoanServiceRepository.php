@@ -3,7 +3,7 @@
 namespace App\Domains\Loan\Repositories;
 
 use App\Domains\Loan\Models\Loan;
-use App\Domains\Loan\Models\ScheduledPayment;
+use App\Domains\Transaction\Models\ScheduledPayment;
 use App\Domains\Transaction\Models\Transaction;
 
 class LoanServiceRepository
