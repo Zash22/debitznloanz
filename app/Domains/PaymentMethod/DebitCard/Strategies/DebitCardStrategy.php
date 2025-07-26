@@ -5,6 +5,7 @@ namespace App\Domains\PaymentMethod\DebitCard\Strategies;
 use App\Domains\PaymentMethod\Contracts\PaymentMethodStrategy;
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
+use Exception;
 
 class DebitCardStrategy implements PaymentMethodStrategy
 {
@@ -20,7 +21,7 @@ class DebitCardStrategy implements PaymentMethodStrategy
     {
         try {
             return $this->debitCardService->create($data);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             abort(422, 'Cannot save card');
         }
     }

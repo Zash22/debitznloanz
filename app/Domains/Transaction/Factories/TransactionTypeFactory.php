@@ -3,6 +3,7 @@
 namespace App\Domains\Transaction\Factories;
 
 use App\Domains\Transaction\Contracts\TransactionStrategy;
+use App\Domains\Transaction\Services\TransactionService;
 use App\Domains\Transaction\TransactionTypes\DebitCardTransactionType;
 use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
 use InvalidArgumentException;
@@ -11,9 +12,9 @@ class TransactionTypeFactory
 {
     private array $strategies = [];
     public function __construct(
-        private ?\App\Domains\Transaction\Services\TransactionService $transactionService = null,
+        private ?TransactionService              $transactionService = null,
         private ?ScheduledPaymentTransactionType $scheduledPaymentTransactionType = null,
-        private ?DebitCardTransactionType $debitCardTransactionType = null
+        private ?DebitCardTransactionType        $debitCardTransactionType = null
     ) {
         if ($scheduledPaymentTransactionType) {
             $this->strategies['scheduled_payment'] = $scheduledPaymentTransactionType;

@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Domains\Loan\Services\LoanService;
+use App\Domains\PaymentMethod\Contracts\PaymentMethodStrategy;
+use App\Domains\PaymentMethod\DebitCard\Repositories\DebitCardRepository;
+use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
+use App\Domains\PaymentMethod\DebitCard\Strategies\DebitCardStrategy;
+use App\Domains\Transaction\Contracts\TransactionStrategy;
+use App\Domains\Transaction\TransactionTypes\DebitCardTransactionType;
+use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,22 +21,22 @@ class AppServiceProvider extends ServiceProvider
     {
         // Payment Method Bindings
         $this->app->bind(
-            \App\Domains\PaymentMethod\Contracts\PaymentMethodStrategy::class,
-            \App\Domains\PaymentMethod\DebitCard\Strategies\DebitCardStrategy::class
+            PaymentMethodStrategy::class,
+            DebitCardStrategy::class
         );
         // Repository Bindings just for injection
         $this->app->bind(
-            \App\Domains\PaymentMethod\DebitCard\Repositories\DebitCardRepository::class,
-            \App\Domains\PaymentMethod\DebitCard\Repositories\DebitCardRepository::class
+            DebitCardRepository::class,
+            DebitCardRepository::class
         );
         // Service Bindings just for injection
         $this->app->bind(
-            \App\Domains\PaymentMethod\DebitCard\Services\DebitCardService::class,
-            \App\Domains\PaymentMethod\DebitCard\Services\DebitCardService::class
+            DebitCardService::class,
+            DebitCardService::class
         );
         $this->app->bind(
-            \App\Domains\Loan\Services\LoanService::class,
-            \App\Domains\Loan\Services\LoanService::class
+            LoanService::class,
+            LoanService::class
         );
 
 //        $this->app->bind(
@@ -41,13 +49,13 @@ class AppServiceProvider extends ServiceProvider
 
 
         $this->app->bind(
-            \App\Domains\Transaction\Contracts\TransactionStrategy::class,
-            \App\Domains\Transaction\TransactionTypes\DebitCardTransactionType::class
+            TransactionStrategy::class,
+            DebitCardTransactionType::class
         );
 
         $this->app->bind(
-            \App\Domains\Transaction\Contracts\TransactionStrategy::class,
-            \App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType::class
+            TransactionStrategy::class,
+            ScheduledPaymentTransactionType::class
         );
     }
 

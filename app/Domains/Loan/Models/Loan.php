@@ -2,6 +2,9 @@
 
 namespace App\Domains\Loan\Models;
 
+use App\Domains\Transaction\Models\ScheduledPayment;
+use App\Domains\Transaction\Models\Transaction;
+use App\Domains\User\Models\User;
 use Database\Factories\LoanFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -23,17 +26,17 @@ class Loan extends Model
     ];
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\Domains\User\Models\User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function scheduledPayments(): HasMany
     {
-        return $this->hasMany(\App\Domains\Transaction\Models\ScheduledPayment::class);
+        return $this->hasMany(ScheduledPayment::class);
     }
 
     public function transactions(): HasMany
     {
-        return $this->hasMany(\App\Domains\Transaction\Models\Transaction::class);
+        return $this->hasMany(Transaction::class);
     }
 
     protected static function newFactory(): LoanFactory

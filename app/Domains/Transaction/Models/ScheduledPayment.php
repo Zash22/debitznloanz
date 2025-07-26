@@ -41,6 +41,6 @@ class ScheduledPayment extends Model
 
     public function transaction(): BelongsTo
     {
-        return $this->belongsTo(\App\Domains\Transaction\Models\Transaction::class);
+        return $this->belongsTo(Transaction::class);
     }
 }

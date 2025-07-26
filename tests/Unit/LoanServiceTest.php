@@ -303,7 +303,7 @@ test('it throws exception when transaction verification fails', function () {
     ]);
 
     expect(fn() => $this->loanService->updateScheduledPayment($transaction, $scheduledPayment))
-        ->toThrow(\Exception::class, 'Invalid transaction for scheduled payment');
+        ->toThrow(Exception::class, 'Invalid transaction for scheduled payment');
 });
 
 

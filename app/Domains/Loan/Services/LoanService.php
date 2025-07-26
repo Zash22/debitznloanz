@@ -7,6 +7,7 @@ use App\Domains\Transaction\Models\ScheduledPayment;
 use App\Domains\Loan\Repositories\LoanServiceRepository;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -75,7 +76,7 @@ class LoanService
                     $scheduledPayment->amount
                 )
             ) {
-                throw new \Exception('Invalid transaction for scheduled payment');
+                throw new Exception('Invalid transaction for scheduled payment');
             }
 
             $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
