@@ -3,7 +3,7 @@
 namespace App\Domains\Loan\Services;
 
 use App\Domains\Loan\Models\Loan;
-use App\Domains\Loan\Models\ScheduledPayment;
+use App\Domains\Transaction\Models\ScheduledPayment;
 use App\Domains\Loan\Repositories\LoanServiceRepository;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;

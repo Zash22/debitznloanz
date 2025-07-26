@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domains\Loan\Models;
+namespace App\Domains\Transaction\Models;
 
 use App\Domains\Transaction\Models\TransactionTracking;
 use Illuminate\Database\Eloquent\Model;
