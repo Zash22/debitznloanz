@@ -10,7 +10,12 @@ use App\Domains\PaymentMethod\DebitCard\Strategies\DebitCardStrategy;
 use App\Domains\Transaction\Contracts\TransactionStrategy;
 use App\Domains\Transaction\TransactionTypes\DebitCardTransactionType;
 use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
+use FilesystemIterator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Database\Migrations\Migrator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -62,8 +67,20 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot()
     {
-        //
+        $migrator = app(Migrator::class);
+        $domainPath = app_path('Domains');
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($domainPath, FilesystemIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            if ($file->isDir() && $file->getFilename() === 'Migrations') {
+                $migrator->path($file->getPathname());
+            }
+        }
     }
 }
