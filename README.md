@@ -123,6 +123,7 @@ vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,des
 * [x] Make TransactionTypeFactory register strategies dynamic, run once and then cached
 * [ ] Create helper functions for date and number formatting
 * [ ] Add logging
+* [ ] fix acknowledgeTransaction if statement in transaction service
 
 
 ---

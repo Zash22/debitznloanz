@@ -2,12 +2,16 @@
 
 namespace App\Domains\Transaction\Models;
 
+use App\Domains\Transaction\Factories\ScheduledPaymentFactory;
 use App\Domains\Transaction\Models\TransactionTracking;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ScheduledPayment extends Model
 {
+    /** @use HasFactory<ScheduledPaymentFactory> */
+    use HasFactory;
     protected $fillable = [
         'loan_id',
         'run_date',
@@ -42,5 +46,10 @@ class ScheduledPayment extends Model
     public function transaction(): BelongsTo
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    public static function newFactory()
+    {
+        return ScheduledPaymentFactory::new();
     }
 }

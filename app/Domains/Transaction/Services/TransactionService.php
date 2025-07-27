@@ -2,6 +2,7 @@
 
 namespace App\Domains\Transaction\Services;
 
+use App\Domains\Transaction\Contracts\TransactionStrategy;
 use App\Domains\Transaction\Factories\TransactionTypeFactory;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Models\TransactionTracking;
@@ -14,11 +15,6 @@ class TransactionService
     ) {
     }
 
-
-    public function processTransaction(string $type, array $data): Transaction
-    {
-        return $this->transactionContext->processTransaction($type, $data);
-    }
     /**
      * Create a new transaction with tracking
      */
@@ -40,6 +36,18 @@ class TransactionService
             // Update tracking with transaction ID
             $tracking->update(['transaction_id' => $transaction->id]);
             return $transaction;
+        });
+    }
+
+    /**
+     * Create a new transaction with tracking
+     */
+    public function insertTransaction(array $data): Transaction
+    {
+        return DB::transaction(function () use ($data) {
+
+            return Transaction::create([...$data]);
+
         });
     }
 
@@ -78,19 +86,10 @@ class TransactionService
      */
     public function acknowledgeTransaction(string $type, array $data)
     {
+        $transaction = $this->insertTransaction($data);
         $strategy = $this->factory->make($type, $data);
-        // Check if the strategy has its own acknowledgeTransaction implementation
-        $strategyClass = get_class($strategy);
-        $interfaceClass = \App\Domains\Transaction\Contracts\TransactionStrategy::class;
-        $strategyMethods = get_class_methods($strategyClass);
-        $interfaceMethods = get_class_methods($interfaceClass);
-        // If the method is implemented in the concrete class, use it
-        if (in_array('acknowledgeTransaction', $strategyMethods) &&
-            (!in_array('acknowledgeTransaction', $interfaceMethods) || (new \ReflectionMethod($strategyClass, 'acknowledgeTransaction'))->getDeclaringClass()->getName() !== $interfaceClass)) {
-            return $strategy->acknowledgeTransaction($data);
-        }
-        // Default logic: create Transaction and update tracking
-        return $this->createTransaction($data);
+         $strategy->acknowledgeTransaction($data);
+         return $transaction;
     }
 
     /**
