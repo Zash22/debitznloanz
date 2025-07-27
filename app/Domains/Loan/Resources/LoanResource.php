@@ -22,7 +22,7 @@ class LoanResource extends JsonResource
             'term_amount' => $this->term_amount,
             'principal_amount' => $this->principal_amount,
             'remaining_balance' => $this->remaining_balance,
-            'scheduled_payments' => $this->whenLoaded('scheduledPayments'),
+            'scheduled_payments' => $this->scheduledPayments(),
         ];
     }
 }

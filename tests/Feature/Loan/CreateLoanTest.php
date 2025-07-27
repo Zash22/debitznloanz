@@ -36,6 +36,7 @@ describe('POST /api/loans', function () {
             'frequency' => 'monthly',
             'term_amount' => 2000.00,
             'principal_amount' => 12000.00,
+            'remaining_balance' => 12000.00,
         ]);
     });
 });
