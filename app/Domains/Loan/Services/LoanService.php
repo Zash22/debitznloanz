@@ -30,7 +30,7 @@ class LoanService
             $loan = $this->loanRepository->create([...$data, 'status' => 'active', 'remaining_balance' => $data['principal_amount']]);
 
             $payments = $this->calculatePayments($loan);
-            $this->transactionService->createOriginatingTransaction('scheduled_payment', [
+            $this->transactionService->startTransaction('scheduled_payment', [
                 'payments' => $payments,
                 'loan_id' => $loan->id
             ]);

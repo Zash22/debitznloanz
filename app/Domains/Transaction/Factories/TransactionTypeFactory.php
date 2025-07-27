@@ -43,7 +43,7 @@ class TransactionTypeFactory
         // Let the container resolve dependencies (including TransactionService)
         $strategy = app()->make($this->typeToClass[$type]);
         if ($validate) {
-            $strategy->validateTransaction($data);
+//            $strategy->validateTransaction($data);
         }
         return $strategy;
     }

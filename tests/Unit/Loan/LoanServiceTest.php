@@ -85,7 +85,7 @@ describe('Unit tests for loans', function () {
             ]
         ];
 
-        $this->transactionService->createOriginatingTransaction('scheduled_payment', [
+        $this->transactionService->startTransaction('scheduled_payment', [
             'payments' => $data,
             'loan_id' => $loan->id
         ]);
@@ -229,7 +229,7 @@ describe('Unit tests for loans', function () {
             ],
         ];
 
-        $this->transactionService->createOriginatingTransaction('scheduled_payment', ['payments' => $runs, 'loan_id' => $loan->id]);
+        $this->transactionService->startTransaction('scheduled_payment', ['payments' => $runs, 'loan_id' => $loan->id]);
         $scheduledPayment = $loan->refresh()->scheduledPayments()->first();
         $transaction = Transaction::factory()->create([
             'user_id' => $user->id,
