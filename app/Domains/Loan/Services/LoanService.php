@@ -3,38 +3,34 @@
 namespace App\Domains\Loan\Services;
 
 use App\Domains\Loan\Models\Loan;
-use App\Domains\Loan\Models\ScheduledPayment;
-use App\Domains\Loan\Repositories\LoanServiceRepository;
+use App\Domains\Transaction\Models\ScheduledPayment;
+use App\Domains\Loan\Repositories\LoanRepository;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Services\TransactionService;
+use Exception;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class LoanService
 {
-    protected LoanServiceRepository $loanServiceRepository;
+    protected LoanRepository $loanRepository;
     protected TransactionService $transactionService;
     public function __construct(
-        LoanServiceRepository $loanServiceRepository,
+        LoanRepository $loanServiceRepository,
         TransactionService $transactionService
     ) {
-        $this->loanServiceRepository = $loanServiceRepository;
+        $this->loanRepository = $loanServiceRepository;
         $this->transactionService = $transactionService;
     }
 
-    /**
-     * @param array $data
-     * @return mixed
-     */
-    public function createLoan(array $data)
+    public function createLoan(array $data): mixed
     {
         return DB::transaction(function () use ($data) {
-            $loan = Loan::create([
-                ...$data,
-                'status' => 'active',
-            ]);
+
+            $loan = $this->loanRepository->create([...$data, 'status' => 'active', 'remaining_balance' => $data['principal_amount']]);
+
             $payments = $this->calculatePayments($loan);
-            $this->transactionService->createOriginatingTransaction('scheduled_payment', [
+            $this->transactionService->startTransaction('scheduled_payment', [
                 'payments' => $payments,
                 'loan_id' => $loan->id
             ]);
@@ -75,10 +71,10 @@ class LoanService
                     $scheduledPayment->amount
                 )
             ) {
-                throw new \Exception('Invalid transaction for scheduled payment');
+                throw new Exception('Invalid transaction for scheduled payment');
             }
 
-            $this->loanServiceRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
+            $this->loanRepository->markSchedulePaymentAsPaid($transaction, $scheduledPayment);
 
             return $scheduledPayment->refresh();
         });
@@ -86,7 +82,7 @@ class LoanService
     public function updateLoanBalance(Loan $loan)
     {
         return DB::transaction(function () use ($loan) {
-            $payments = $this->loanServiceRepository->getLoanPayments($loan);
+            $payments = $this->loanRepository->getLoanPayments($loan);
             foreach ($payments as $payment) {
                 if (
                     !$this->transactionService->getTransactionByReference(

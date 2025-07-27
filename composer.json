@@ -32,8 +32,12 @@
     "autoload": {
         "psr-4": {
             "App\\": "app/",
-            "Database\\Factories\\": "database/factories/",
-            "Database\\Seeders\\": "database/seeders/"
+            "Database\\Seeders\\": "database/seeders/",
+            "App\\Domains\\Loan\\Factories\\": "app/Domains/Loan/Factories/",
+            "App\\Domains\\User\\Factories\\": "app/Domains/User/Factories/",
+            "App\\Domains\\Vault\\Factories\\": "app/Domains/Vault/Factories/",
+            "App\\Domains\\Transaction\\Factories\\": "app/Domains/Transaction/Factories/",
+            "App\\Domains\\PaymentMethod\\DebitCard\\Factories\\": "app/Domains/PaymentMethod/DebitCard/Factories/"
         }
     },
     "autoload-dev": {

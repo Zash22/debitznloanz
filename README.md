@@ -45,7 +45,7 @@ php artisan migrate --env=testing
 php artisan tinker
 ```
 ```php
-$user- = \App\Domains\User\Models\User::factory()->create();
+$user = \App\Domains\User\Models\User::factory()->create();
 return $user->createToken('token_name')->plainTextToken;
 ```
 
@@ -100,9 +100,9 @@ vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,des
   *In real-world apps, consider services like AWS KMS or HashiCorp Vault*
 * [ ] Add policy for `viewAll` DebitCard action
 * [ ] Use UUIDs for card and user in URLs and payloads
-* [ ] Move migrations and factories into their respective Domain folders
+* [x] Move migrations and factories into their respective Domain folders
 * [ ] Define status flow for loans and scheduled runs
-* [ ] Implement autoloading for domain-based structure
+* [x] Implement autoloading for domain-based structure
 * [ ] Improve date handling
 * [ ] Add input validation to `LoanService`
 * [ ] Configure Scribe properly for accurate documentation
@@ -113,16 +113,17 @@ vendor/bin/phpmd app text cleancode,codesize,unusedcode,naming,controversial,des
 * [ ] Add more tests, aim for 100% coverage
 * [ ] Remove unused functions from transactionStratey, TransactionService and both transaction types
 * [ ] Implement the debitCardvalidator and create scheduledPayments validator
-* [ ] Decide on file structure for Transaction domain
-* [ ] Move all models, requests, resources related to transaction types to transactions domain
-* [ ] Refactor directy structure of feature tests 
+* [x] Decide on file structure for Transaction domain
+* [x] Move all models, requests, resources related to transaction types to transactions domain
+* [x] Refactor directy structure of feature tests 
 * [ ] Implement repository pattern for transaction domain
 * [ ] Implement repository pattern for transaction domain
 * [ ] Implement Eloquent's pivot table for transaction_tracking
 * [ ] Implement Eloquent's pivot table for transaction_tracking with polymorphism
-* [ ] Make TransactionTypeFactory register strategies dynamic, run once and then cached
+* [x] Make TransactionTypeFactory register strategies dynamic, run once and then cached
 * [ ] Create helper functions for date and number formatting
 * [ ] Add logging
+* [ ] fix acknowledgeTransaction if statement in transaction service
 
 
 ---

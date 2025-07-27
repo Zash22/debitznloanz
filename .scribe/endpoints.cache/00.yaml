@@ -5,6 +5,82 @@ description: ''
 endpoints:
   -
     httpMethods:
+      - POST
+    uri: api/loans
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      term:
+        name: term
+        description: 'Must be at least 1.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      frequency:
+        name: frequency
+        description: ''
+        required: true
+        example: biweekly
+        type: string
+        enumValues:
+          - monthly
+          - biweekly
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      term_amount:
+        name: term_amount
+        description: 'Must be at least 0.01.'
+        required: true
+        example: 39
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+      principal_amount:
+        name: principal_amount
+        description: 'Must be at least 0.01.'
+        required: true
+        example: 84
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        custom: []
+    cleanBodyParameters:
+      term: 16
+      frequency: biweekly
+      term_amount: 39
+      principal_amount: 84
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
       - GET
     uri: api/debit-cards
     metadata:

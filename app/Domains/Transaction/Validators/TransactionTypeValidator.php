@@ -2,11 +2,7 @@
 
 namespace App\Domains\Transaction\Validators;
 
-interface TransactionTypeValidator
+abstract class TransactionTypeValidator
 {
-    public function rules(): array;
-
-    public function messages(): array;
-
-    public function validate(array $data): void;
+    abstract public function validate(array $data): bool;
 }

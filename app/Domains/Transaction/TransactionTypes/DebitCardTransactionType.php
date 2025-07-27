@@ -17,29 +17,6 @@ class DebitCardTransactionType implements TransactionStrategy
     {
         $this->transactionService = $transactionService;
     }
-    public function process(array $data): Transaction
-    {
-        $transaction = $this->transactionService->createTransaction([
-            'user_id' => $data['user_id'],
-            'amount' => $data['amount'],
-            'ref' => $data['payment_reference'],
-            'paid_at' => now()
-        ]);
-        DebitCardTransaction::create([
-            'debit_card_id' => $data['debit_card_id'],
-            'amount' => $data['amount'],
-            'payment_reference' => $data['payment_reference'],
-            'transaction_id' => $transaction->id
-        ]);
-        return $transaction;
-    }
-    public function validateTransaction(array $data): bool
-    {
-        return isset($data['debit_card_id']) &&
-            isset($data['amount']) &&
-            isset($data['payment_reference']) &&
-            isset($data['user_id']);
-    }
     public function getType(): string
     {
         return self::TYPE;
@@ -50,14 +27,51 @@ class DebitCardTransactionType implements TransactionStrategy
         return new DebitCardTransactionValidator();
     }
 
-    public function createOriginatingTransaction(array $array): mixed
+    /**
+     * 1. Start the transaction (create the debit card transaction intent/record)
+     */
+    public function startTransaction(array $data): mixed
     {
-        return DebitCardTransaction::create($array);
+        // Create the DebitCardTransaction intent/record (without confirmed Transaction)
+        return DebitCardTransaction::create($data);
     }
 
-    public function getOriginatingTransactions(int $user_id): mixed
+    /**
+     * 2. Acknowledge the transaction (bank confirms, create Transaction and link)
+     */
+    public function acknowledgeTransaction(array $data): mixed
     {
-        $user = User::find($user_id);
+        // Create the actual Transaction and link it to the DebitCardTransaction
+        $transaction = $this->transactionService->createTransaction([
+            'user_id' => $data['user_id'],
+            'amount' => $data['amount'],
+            'ref' => $data['payment_reference'],
+            'paid_at' => now()
+        ]);
+        $debitCardTransaction = DebitCardTransaction::where('payment_reference', $data['payment_reference'])->first();
+        if ($debitCardTransaction) {
+            $debitCardTransaction->transaction_id = $transaction->id;
+            $debitCardTransaction->save();
+        }
+        return $transaction;
+    }
+
+    /**
+     * 3. Finalise the transaction (mark as settled/complete if needed)
+     */
+    public function finaliseTransaction(array $data): mixed
+    {
+        // Example: mark the DebitCardTransaction as settled/complete
+        $debitCardTransaction = DebitCardTransaction::where('payment_reference', $data['payment_reference'])->first();
+        if ($debitCardTransaction) {
+            $debitCardTransaction->status = 'settled'; // You may need to add a status column if not present
+            $debitCardTransaction->save();
+        }
+        return $debitCardTransaction;
+    }
+    public function getContextTransactions(int|string $contextId = null): mixed
+    {
+        $user = User::find($contextId);
         return $user->debit_card_transactions;
     }
 }

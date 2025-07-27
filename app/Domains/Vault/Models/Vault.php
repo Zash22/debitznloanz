@@ -3,7 +3,7 @@
 namespace App\Domains\Vault\Models;
 
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
-use Database\Factories\VaultFactory;
+use App\Domains\Vault\Factories\VaultFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
