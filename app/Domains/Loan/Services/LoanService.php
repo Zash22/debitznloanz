@@ -16,14 +16,14 @@ class LoanService
     protected LoanRepository $loanRepository;
     protected TransactionService $transactionService;
     public function __construct(
-        LoanRepository     $loanServiceRepository,
+        LoanRepository $loanServiceRepository,
         TransactionService $transactionService
     ) {
         $this->loanRepository = $loanServiceRepository;
         $this->transactionService = $transactionService;
     }
 
-    public function createLoan(array $data):mixed
+    public function createLoan(array $data): mixed
     {
         return DB::transaction(function () use ($data) {
 
@@ -65,10 +65,11 @@ class LoanService
     {
         return DB::transaction(function () use ($transaction, $scheduledPayment) {
             // Verify transaction tracking exists
-            if (!$this->transactionService->verifyTransaction(
-                'scheduled_payment_' . $scheduledPayment->id,
-                $scheduledPayment->amount
-            )
+            if (
+                !$this->transactionService->verifyTransaction(
+                    'scheduled_payment_' . $scheduledPayment->id,
+                    $scheduledPayment->amount
+                )
             ) {
                 throw new Exception('Invalid transaction for scheduled payment');
             }
@@ -83,9 +84,10 @@ class LoanService
         return DB::transaction(function () use ($loan) {
             $payments = $this->loanRepository->getLoanPayments($loan);
             foreach ($payments as $payment) {
-                if (!$this->transactionService->getTransactionByReference(
-                    'scheduled_payment_' . $payment->id
-                )
+                if (
+                    !$this->transactionService->getTransactionByReference(
+                        'scheduled_payment_' . $payment->id
+                    )
                 ) {
                     abort(422, 'payments need audit');
                 }

@@ -32,7 +32,6 @@ class TransactionTypeFactory
             }
             return $map;
         });
-
     }
 
     public function make(string $type, array $data = [], bool $validate = true): TransactionStrategy
