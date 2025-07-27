@@ -8,6 +8,7 @@ use App\Domains\PaymentMethod\DebitCard\Repositories\DebitCardRepository;
 use App\Domains\PaymentMethod\DebitCard\Services\DebitCardService;
 use App\Domains\PaymentMethod\DebitCard\Strategies\DebitCardStrategy;
 use App\Domains\Transaction\Contracts\TransactionStrategy;
+use App\Domains\Transaction\Factories\TransactionTypeFactory;
 use App\Domains\Transaction\TransactionTypes\DebitCardTransactionType;
 use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
 use FilesystemIterator;
@@ -51,16 +52,9 @@ class AppServiceProvider extends ServiceProvider
 //        $this->app->bind(\App\Domains\Transaction\TransactionTypes\DebitCardTransactionType::class);
 //        $this->app->bind(\App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType::class);
 
-
-        $this->app->bind(
-            TransactionStrategy::class,
-            DebitCardTransactionType::class
-        );
-
-        $this->app->bind(
-            TransactionStrategy::class,
-            ScheduledPaymentTransactionType::class
-        );
+        $this->app->singleton(TransactionTypeFactory::class, function ($app) {
+            return new TransactionTypeFactory();
+        });
     }
 
     /**
