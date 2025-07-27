@@ -7,7 +7,7 @@ use App\Domains\Transaction\Models\ScheduledPayment;
 use App\Domains\Transaction\Models\Transaction;
 use Illuminate\Database\Eloquent\Collection;
 
-class LoanServiceRepository
+class LoanRepository
 {
     public function markSchedulePaymentAsPaid(Transaction $transaction, ScheduledPayment $scheduledPayment)
     {
@@ -17,5 +17,10 @@ class LoanServiceRepository
     public function getLoanPayments(Loan $loan): Collection
     {
         return $loan->scheduledPayments()->where('paid', true)->get();
+    }
+
+    public function create(array $data): Loan
+    {
+        return Loan::create($data);
     }
 }

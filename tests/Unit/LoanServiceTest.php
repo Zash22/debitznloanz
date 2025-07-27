@@ -6,7 +6,7 @@ use App\Domains\Transaction\Services\TransactionService;
 use App\Domains\User\Models\User;
 use App\Domains\Loan\Services\LoanService;
 use Illuminate\Database\Eloquent\Collection;
-use App\Domains\Loan\Repositories\LoanServiceRepository;
+use App\Domains\Loan\Repositories\LoanRepository;
 use App\Domains\Transaction\TransactionTypes\ScheduledPaymentTransactionType;
 use App\Domains\Transaction\Factories\TransactionTypeFactory;
 
@@ -21,7 +21,7 @@ beforeEach(function () {
 
     $this->transactionService = new TransactionService($transactionTypeFactory);
     $scheduledPaymentTransaction = new ScheduledPaymentTransactionType($this->transactionService);
-    $this->loanService = new LoanService(new LoanServiceRepository(), $this->transactionService);
+    $this->loanService = new LoanService(new LoanRepository(), $this->transactionService);
 });
 
 test('it creates a loan', function () {
