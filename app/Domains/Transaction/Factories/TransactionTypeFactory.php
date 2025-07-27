@@ -12,9 +12,9 @@ class TransactionTypeFactory
 {
     private array $strategies = [];
     public function __construct(
-        private ?TransactionService              $transactionService = null,
+        private ?TransactionService $transactionService = null,
         private ?ScheduledPaymentTransactionType $scheduledPaymentTransactionType = null,
-        private ?DebitCardTransactionType        $debitCardTransactionType = null
+        private ?DebitCardTransactionType $debitCardTransactionType = null
     ) {
         if ($scheduledPaymentTransactionType) {
             $this->strategies['scheduled_payment'] = $scheduledPaymentTransactionType;

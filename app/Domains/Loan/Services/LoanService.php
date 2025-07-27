@@ -70,11 +70,10 @@ class LoanService
     {
         return DB::transaction(function () use ($transaction, $scheduledPayment) {
             // Verify transaction tracking exists
-            if (
-                !$this->transactionService->verifyTransaction(
-                    'scheduled_payment_' . $scheduledPayment->id,
-                    $scheduledPayment->amount
-                )
+            if (!$this->transactionService->verifyTransaction(
+                'scheduled_payment_' . $scheduledPayment->id,
+                $scheduledPayment->amount
+            )
             ) {
                 throw new Exception('Invalid transaction for scheduled payment');
             }
@@ -89,10 +88,9 @@ class LoanService
         return DB::transaction(function () use ($loan) {
             $payments = $this->loanServiceRepository->getLoanPayments($loan);
             foreach ($payments as $payment) {
-                if (
-                    !$this->transactionService->getTransactionByReference(
-                        'scheduled_payment_' . $payment->id
-                    )
+                if (!$this->transactionService->getTransactionByReference(
+                    'scheduled_payment_' . $payment->id
+                )
                 ) {
                     abort(422, 'payments need audit');
                 }

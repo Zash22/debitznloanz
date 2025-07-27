@@ -11,7 +11,6 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class LoanFactory extends Factory
 {
-
     protected $model = Loan::class;
 
     /**

@@ -16,7 +16,6 @@ use Illuminate\Database\Migrations\Migrator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 
-
 class AppServiceProvider extends ServiceProvider
 {
     /**
