@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Domains\Transaction\Factories;
 
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\Transaction\Models\DebitCardTransaction;

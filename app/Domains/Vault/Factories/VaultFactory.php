@@ -1,5 +1,5 @@
 <?php
-namespace Database\Factories;
+namespace App\Domains\Vault\Factories;
 use App\Domains\Vault\Models\Vault;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Crypt;

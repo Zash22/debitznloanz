@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Domains\Loan\Factories;
 
 use App\Domains\Loan\Models\Loan;
 use App\Domains\User\Models\User;

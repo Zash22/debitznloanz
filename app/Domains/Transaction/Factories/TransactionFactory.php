@@ -1,6 +1,6 @@
 <?php
 
-namespace Database\Factories;
+namespace App\Domains\Transaction\Factories;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
 use App\Domains\Transaction\Models\Transaction;

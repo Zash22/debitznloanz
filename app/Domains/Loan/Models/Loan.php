@@ -5,7 +5,7 @@ namespace App\Domains\Loan\Models;
 use App\Domains\Transaction\Models\ScheduledPayment;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\User\Models\User;
-use Database\Factories\LoanFactory;
+use App\Domains\Loan\Factories\LoanFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;

@@ -3,7 +3,7 @@
 namespace App\Domains\Transaction\Models;
 
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
-use Database\Factories\DebitCardTransactionFactory;
+use App\Domains\Transaction\Factories\DebitCardTransactionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

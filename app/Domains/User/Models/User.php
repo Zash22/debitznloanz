@@ -5,7 +5,7 @@ namespace App\Domains\User\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Domains\PaymentMethod\DebitCard\Models\DebitCard;
 use App\Domains\Transaction\Models\DebitCardTransaction;
-use Database\Factories\UserFactory;
+use App\Domains\User\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Foundation\Auth\User as Authenticatable;
