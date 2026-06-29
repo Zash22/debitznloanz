@@ -2,7 +2,7 @@
 
 namespace App\Domains\Transaction\Models;
 
-use Database\Factories\TransactionFactory;
+use App\Domains\Transaction\Factories\TransactionFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use App\Domains\User\Models\User;

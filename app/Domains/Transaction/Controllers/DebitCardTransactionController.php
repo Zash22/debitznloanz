@@ -31,7 +31,7 @@ class DebitCardTransactionController extends Controller
     public function index(Request $request): AnonymousResourceCollection
     {
         return DebitCardTransactionResource::collection(
-            $this->transactionService->getOriginatingTransactions('debit_card', $request->user()->id)
+            $this->transactionService->getContextTransactions('debit_card', $request->user()->id)
         );
     }
 
@@ -40,12 +40,10 @@ class DebitCardTransactionController extends Controller
     {
         $validated = $request->validated();
 
-        $transaction = $this->transactionService->createOriginatingTransaction(
+        $transaction = $this->transactionService->startTransaction(
             'debit_card',
             $validated
         );
-
-//        dd($transaction);
 
         return new DebitCardTransactionResource($transaction);
     }

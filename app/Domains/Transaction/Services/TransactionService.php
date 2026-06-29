@@ -2,6 +2,7 @@
 
 namespace App\Domains\Transaction\Services;
 
+use App\Domains\Transaction\Contracts\TransactionStrategy;
 use App\Domains\Transaction\Factories\TransactionTypeFactory;
 use App\Domains\Transaction\Models\Transaction;
 use App\Domains\Transaction\Models\TransactionTracking;
@@ -14,11 +15,6 @@ class TransactionService
     ) {
     }
 
-
-    public function processTransaction(string $type, array $data): Transaction
-    {
-        return $this->transactionContext->processTransaction($type, $data);
-    }
     /**
      * Create a new transaction with tracking
      */
@@ -46,27 +42,14 @@ class TransactionService
     /**
      * Create a new transaction with tracking
      */
-    public function recieveTransaction(array $data): Transaction
+    public function insertTransaction(array $data): Transaction
     {
         return DB::transaction(function () use ($data) {
-            // Create tracking record first
-            $tracking = TransactionTracking::create([
-                'reference' => $data['ref'] ?? null,
-                'transaction_id' => null
-            ]);
-            // Create transaction
-            $transaction = Transaction::create([
-                'user_id' => $data['user_id'],
-                'amount' => $data['amount'],
-                'ref' => $data['ref'] ?? $tracking->id,
-                'paid_at' => $data['paid_at'] ?? now()
-            ]);
-            // Update tracking with transaction ID
-            $tracking->update(['transaction_id' => $transaction->id]);
-            return $transaction;
+
+            return Transaction::create([...$data]);
+
         });
     }
-
 
     /**
      * Get transaction by reference
@@ -89,15 +72,38 @@ class TransactionService
         return (float)$tracking->transaction->amount == $expectedAmount;
     }
 
-    public function createOriginatingTransaction(string $type, array $data)
+    /**
+     * Start the transaction (delegates to strategy)
+     */
+    public function startTransaction(string $type, array $data)
     {
-        $strategy = $this->factory->make($type, $data); // ✅ Validation happens here
-        return $strategy->createOriginatingTransaction($data);
+        $strategy = $this->factory->make($type, $data);
+        return $strategy->startTransaction($data);
     }
 
-    public function getOriginatingTransactions(string $type, int $id)
+    /**
+     * Acknowledge the transaction (default: TransactionService logic, unless strategy overrides)
+     */
+    public function acknowledgeTransaction(string $type, array $data)
     {
-        $strategy = $this->factory->make($type);
-        return $strategy->getOriginatingTransactions($id);
+        $transaction = $this->insertTransaction($data);
+        $strategy = $this->factory->make($type, $data);
+         $strategy->acknowledgeTransaction($data);
+         return $transaction;
+    }
+
+    /**
+     * Finalise the transaction (delegates to strategy)
+     */
+    public function finaliseTransaction(string $type, array $data)
+    {
+        $strategy = $this->factory->make($type, $data);
+        return $strategy->finaliseTransaction($data);
+    }
+
+    public function getContextTransactions(string $type, int $contextId): mixed
+    {
+        $strategy = $this->factory->make($type, [$contextId]);
+        return $strategy->getContextTransactions($contextId);
     }
 }
